@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#23281f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="午餐訂便當">
+<meta name="mobile-web-app-capable" content="yes">
+<title>2026年8月午餐訂購</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700;900&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#23281f;
+  --ink-soft:#3a4232;
+  --paper:#f2efe4;
+  --paper-2:#e9e4d3;
+  --card:#fffdf6;
+  --accent:#d6a419;
+  --accent-deep:#a9800f;
+  --chili:#a13d2c;
+  --line:#d8d2bf;
+  --muted:#7a7563;
+  --radius:14px;
+  --shadow: 0 2px 0 rgba(35,40,31,0.06), 0 10px 24px -14px rgba(35,40,31,0.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(35,40,31,0.06) 1px, transparent 0);
+  background-size: 22px 22px;
+  color:var(--ink);
+  font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 20px 120px;}
+
+/* ---------- header ---------- */
+header.top{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+  border-bottom:3px solid var(--ink);
+  padding-bottom:18px;margin-bottom:26px;flex-wrap:wrap;
+}
+.eyebrow{
+  font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent-deep);
+  font-weight:700;margin-bottom:6px;
+}
+h1{
+  font-family:'Noto Serif TC',serif;font-weight:900;
+  font-size:clamp(28px,4.4vw,42px);margin:0;line-height:1.15;letter-spacing:.02em;
+}
+h1 .accent{color:var(--chili);}
+.top-right{text-align:right;font-size:13px;color:var(--muted);line-height:1.6;}
+.top-right b{color:var(--ink);}
+
+/* ---------- name field ---------- */
+.namebar{
+  display:flex;align-items:center;gap:12px;background:var(--card);
+  border:1.5px solid var(--ink);border-radius:var(--radius);
+  padding:12px 16px;margin-bottom:22px;box-shadow:var(--shadow);
+  flex-wrap:wrap;
+}
+.namebar label{font-weight:700;font-size:14px;white-space:nowrap;}
+.namebar input{
+  flex:1;min-width:140px;border:none;border-bottom:2px solid var(--line);
+  background:transparent;font-size:16px;font-family:inherit;padding:6px 4px;
+  color:var(--ink);outline:none;
+}
+.namebar input:focus{border-bottom-color:var(--accent);}
+
+/* ---------- calendar strip (ticket tabs) ---------- */
+.cal-label{font-weight:700;font-size:14px;margin:0 0 10px 2px;color:var(--ink-soft);}
+.calendar{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
+  gap:10px;margin-bottom:30px;
+}
+.day-chip{
+  position:relative;
+  background:var(--card);
+  border:1.5px solid var(--ink);
+  border-radius:10px;
+  padding:10px 8px 12px;
+  cursor:pointer;
+  text-align:center;
+  transition:transform .12s ease, box-shadow .12s ease;
+  box-shadow:2px 2px 0 var(--ink);
+}
+.day-chip:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink);}
+.day-chip:before,.day-chip:after{
+  content:"";position:absolute;top:50%;width:10px;height:10px;
+  background:var(--paper);border:1.5px solid var(--ink);border-radius:50%;
+  transform:translateY(-50%);
+}
+.day-chip:before{left:-6px;}
+.day-chip:after{right:-6px;}
+.day-chip .dow{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.05em;}
+.day-chip .dnum{font-family:'Noto Serif TC',serif;font-weight:900;font-size:22px;line-height:1.3;}
+.day-chip .store{
+  font-size:11px;font-weight:600;color:var(--ink-soft);
+  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:2.6em;
+}
+.day-chip.selected{
+  background:var(--ink);color:var(--paper);border-color:var(--ink);
+  box-shadow:2px 2px 0 var(--accent);
+}
+.day-chip.selected .dow,.day-chip.selected .store{color:#cfd6c2;}
+.day-chip.selected .dnum{color:var(--accent);}
+.day-chip.today .dnum{position:relative;}
+.day-chip.today .dnum:after{
+  content:"";position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);
+  width:6px;height:6px;border-radius:50%;background:var(--chili);
+}
+.day-chip.locked{
+  cursor:not-allowed;opacity:.42;filter:grayscale(65%);box-shadow:2px 2px 0 var(--line);
+}
+.day-chip.locked:hover{transform:none;box-shadow:2px 2px 0 var(--line);}
+.day-chip.locked .lock-tag{
+  position:absolute;top:-8px;right:-6px;background:var(--chili);color:#fff;
+  font-size:9px;font-weight:800;padding:2px 6px;border-radius:999px;letter-spacing:.03em;
+}
+.day-chip.backup-chip{border-style:dashed;}
+.day-chip.backup-chip .dow{color:var(--accent-deep);}
+.backup-select{
+  margin-top:8px;width:100%;box-sizing:border-box;font-family:inherit;font-size:11px;
+  border:1px solid var(--line);border-radius:6px;padding:4px 5px;background:var(--card);color:var(--ink);
+}
+.day-chip.backup-chip.selected .backup-select{background:#3a4232;color:var(--paper);border-color:#565f4b;}
+
+/* ---------- store card ---------- */
+.store-card{
+  background:var(--card);border:1.5px solid var(--ink);border-radius:var(--radius);
+  padding:20px 22px;margin-bottom:22px;box-shadow:var(--shadow);
+}
+.store-card h2{
+  font-family:'Noto Serif TC',serif;font-size:24px;margin:0 0 4px;
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+}
+.store-card h2 .tag{
+  font-size:11px;background:var(--accent);color:var(--ink);
+  padding:3px 9px;border-radius:999px;font-weight:700;letter-spacing:.05em;
+}
+.store-meta{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:6px 22px;margin-top:12px;font-size:13.5px;color:var(--ink-soft);
+}
+.store-meta div span.k{color:var(--muted);margin-right:6px;}
+.store-note{
+  margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);
+  font-size:13px;color:var(--chili);font-weight:500;
+}
+
+/* ---------- menu ---------- */
+.menu-section h3{
+  font-family:'Noto Serif TC',serif;font-size:17px;margin:26px 0 10px;
+  padding-left:12px;border-left:5px solid var(--accent);
+}
+.menu-grid{display:flex;flex-direction:column;gap:8px;}
+.item-row{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:12px 14px;
+}
+.item-row.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(214,164,25,0.25) inset;}
+.item-info{flex:1;min-width:0;}
+.item-name{font-weight:600;font-size:14.5px;}
+.item-price{font-size:12.5px;color:var(--muted);margin-top:2px;}
+.stepper{display:flex;align-items:center;gap:0;flex-shrink:0;touch-action:manipulation;}
+.stepper button{
+  width:40px;height:40px;border:1.5px solid var(--ink);background:var(--paper);
+  font-size:19px;font-weight:700;cursor:pointer;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .1s;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+.stepper button:hover{background:var(--accent);}
+.stepper button:active{background:var(--accent);}
+.stepper button:first-child{border-radius:8px 0 0 8px;}
+.stepper button:last-child{border-radius:0 8px 8px 0;}
+.stepper .qty{
+  width:38px;text-align:center;font-weight:700;font-size:15px;
+  border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
+  height:40px;line-height:40px;background:var(--card);
+}
+
+/* ---------- cart / summary ---------- */
+.cart-bar{
+  position:sticky;bottom:0;left:0;right:0;
+  margin-top:30px;
+  background:var(--ink);color:var(--paper);
+  border-radius:var(--radius) var(--radius) 0 0;
+  box-shadow:0 -8px 24px rgba(0,0,0,.25);
+}
+.cart-summary{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 22px;flex-wrap:wrap;
+}
+.cart-summary .count{font-size:13px;color:#c9cdb9;}
+.cart-summary .total{font-family:'Noto Serif TC',serif;font-size:24px;font-weight:900;color:var(--accent);}
+.cart-summary .total small{font-size:13px;color:#c9cdb9;font-weight:500;}
+.cart-actions{display:flex;gap:10px;}
+.btn{
+  border:none;border-radius:999px;padding:11px 22px;font-weight:700;font-size:14px;
+  cursor:pointer;font-family:inherit;transition:transform .1s;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--accent);color:var(--ink);}
+.btn-primary:hover{background:#e6b52a;}
+.btn-ghost{background:transparent;color:var(--paper);border:1.5px solid #565f4b;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.cart-detail{
+  max-height:0;overflow:hidden;transition:max-height .25s ease;
+  border-top:1px solid #3a4232;
+}
+.cart-detail.open{max-height:340px;overflow-y:auto;}
+.cart-detail ul{list-style:none;margin:0;padding:14px 22px;display:flex;flex-direction:column;gap:8px;}
+.cart-detail li{display:flex;justify-content:space-between;font-size:13.5px;gap:10px;}
+.cart-detail li .n{color:#e6e3d4;}
+.cart-detail li .p{color:var(--accent);font-weight:700;white-space:nowrap;}
+
+.empty-note{
+  text-align:center;padding:60px 20px;color:var(--muted);font-size:14px;
+}
+
+/* ---------- order modal ---------- */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(35,40,31,.55);
+  display:none;align-items:center;justify-content:center;padding:20px;z-index:50;
+}
+.modal-backdrop.open{display:flex;}
+.modal{
+  background:var(--card);border-radius:var(--radius);max-width:480px;width:100%;
+  padding:24px;box-shadow:var(--shadow);max-height:86vh;display:flex;flex-direction:column;
+}
+.modal h3{font-family:'Noto Serif TC',serif;margin:0 0 12px;font-size:20px;}
+.modal textarea{
+  flex:1;min-height:260px;border:1.5px solid var(--line);border-radius:10px;
+  padding:12px;font-family:'Noto Sans TC',monospace;font-size:13px;line-height:1.7;
+  resize:vertical;background:var(--paper);color:var(--ink);
+}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:14px;}
+.copied-note{font-size:12.5px;color:var(--chili);margin-top:8px;min-height:1.2em;font-weight:600;}
+
+footer.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:50px;line-height:1.8;}
+
+@media (max-width:560px){
+  .top-right{text-align:left;}
+  .cart-summary{padding:14px 16px;}
+  .wrap{padding:18px 14px 130px;}
+  h1{font-size:26px;}
+  .calendar{grid-template-columns:repeat(3,1fr);gap:8px;}
+  .day-chip{padding:9px 6px 10px;}
+  .day-chip:before,.day-chip:after{display:none;}
+  .store-card{padding:16px 16px;}
+  .item-row{padding:11px 12px;}
+  .btn{padding:12px 18px;}
+  .modal{padding:18px;max-height:92vh;}
+}
+
+
+/* ---------- tabs + lock ---------- */
+.tabs{display:flex;align-items:center;gap:6px;margin:0 0 24px;border-bottom:2px solid var(--line);}
+.tab-btn{appearance:none;background:none;border:none;font-family:inherit;font-size:15px;font-weight:700;
+  color:var(--muted);padding:11px 15px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .12s;}
+.tab-btn:hover{color:var(--ink-soft);}
+.tab-btn.active{color:var(--ink);border-bottom-color:var(--accent);}
+.lock-btn{margin-left:auto;appearance:none;background:none;border:none;font-size:18px;cursor:pointer;padding:8px;line-height:1;opacity:.7;align-self:center;}
+.lock-btn.on{opacity:1;}
+.view{display:none;}
+.view.active{display:block;}
+.day-chip.has-orders .dnum:before{content:"";position:absolute;top:-4px;right:-4px;width:7px;height:7px;border-radius:50%;background:#2e7d32;}
+.day-chip .dnum{position:relative;}
+
+/* ---------- order note (in cart bar) ---------- */
+.order-note-wrap{padding:0 22px 12px;}
+.order-note-wrap input{width:100%;box-sizing:border-box;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.28);color:#fff;border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;outline:none;}
+.order-note-wrap input::placeholder{color:rgba(255,255,255,.55);}
+
+/* ---------- admin bar / proxy ---------- */
+.admin-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fbf3e4;border:1px solid #e6c48f;
+  border-radius:10px;padding:10px 14px;margin-bottom:18px;}
+.admin-hint{font-size:12px;color:var(--muted);}
+.btn-mini{appearance:none;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:8px;
+  padding:6px 12px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:1.5px 1.5px 0 var(--ink);}
+.btn-mini:active{transform:translate(1px,1px);box-shadow:none;}
+.proxy-banner{background:#eaf1fb;border:1px solid #a9c4ec;border-radius:10px;padding:11px 14px;margin-bottom:16px;
+  font-size:13px;font-weight:600;color:#2c4a7a;line-height:1.7;}
+.proxy-banner .btn-mini{border-color:#2c4a7a;color:#2c4a7a;box-shadow:1.5px 1.5px 0 #2c4a7a;margin-left:4px;}
+
+/* ---------- summary / payment panels ---------- */
+.date-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.date-chip{background:var(--card);border:1.5px solid var(--ink);border-radius:999px;padding:7px 15px;
+  font-weight:700;font-size:13px;cursor:pointer;color:var(--ink);box-shadow:1.5px 1.5px 0 var(--ink);transition:transform .1s;}
+.date-chip:active{transform:translate(1px,1px);box-shadow:none;}
+.date-chip.selected{background:var(--ink);color:var(--paper);box-shadow:1.5px 1.5px 0 var(--accent);}
+.panel{background:var(--card);border:1.5px solid var(--ink);border-radius:var(--radius);
+  padding:20px 22px;margin-bottom:20px;box-shadow:var(--shadow);}
+.panel-title{font-family:'Noto Serif TC',serif;font-size:22px;margin:0 0 4px;}
+.panel-sub{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--accent-deep);
+  margin:20px 0 6px;padding-left:10px;border-left:4px solid var(--accent);}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);}
+.srow:last-child{border-bottom:none;}
+.srow .nm{font-weight:600;font-size:14.5px;}
+.srow .sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
+.srow .qty-badge{font-weight:800;color:var(--accent-deep);font-size:15px;white-space:nowrap;}
+.srow .amt{font-weight:800;color:var(--ink);white-space:nowrap;}
+.del-person{appearance:none;background:none;border:none;font-size:16px;cursor:pointer;padding:2px 6px;margin-left:6px;opacity:.65;}
+.del-person:active{opacity:1;}
+.grand{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;
+  border-top:2px solid var(--ink);font-weight:900;font-size:15px;}
+.grand .amt{font-family:'Noto Serif TC',serif;font-size:24px;color:var(--chili);}
+.clear-day-btn{margin-top:14px;width:100%;box-sizing:border-box;appearance:none;border:1.5px solid var(--chili);
+  background:#fff;color:var(--chili);border-radius:10px;padding:11px;font-weight:800;font-family:inherit;cursor:pointer;}
+.clear-day-btn:active{background:#fff2ea;}
+
+/* payment */
+.pay-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 18px;}
+.pay-stat{background:var(--paper-2);border-radius:10px;padding:12px 8px;text-align:center;}
+.pay-stat .lab{font-size:11px;color:var(--muted);font-weight:700;}
+.pay-stat .val{font-family:'Noto Serif TC',serif;font-weight:900;font-size:20px;margin-top:3px;}
+.pay-stat .val.blue{color:var(--ink);}
+.pay-stat .val.green{color:#2e7d32;}
+.pay-stat .val.orange{color:var(--chili);}
+.pay-row{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);}
+.pay-row.paid .pname,.pay-row.paid .pamt{color:var(--muted);text-decoration:line-through;}
+.pay-check{width:34px;height:34px;border-radius:9px;border:2px solid var(--line);background:#fff;
+  cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:16px;margin-top:2px;}
+.pay-check.on{background:#2e7d32;border-color:#2e7d32;}
+.pinfo{flex:1;min-width:0;}
+.pname{font-weight:700;font-size:14.5px;}
+.pitems{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5;}
+.pamt{font-weight:800;white-space:nowrap;margin-top:2px;}
+.unpaid-box{margin-top:16px;background:#fbf1e2;border:1px solid #e6c48f;border-radius:10px;padding:12px 14px;}
+.unpaid-box .t{font-size:12px;font-weight:800;color:var(--chili);margin-bottom:8px;}
+.unpaid-chip{display:inline-block;background:#fff;border:1px solid #e6c48f;border-radius:999px;padding:4px 11px;font-size:12px;margin:0 6px 6px 0;font-weight:600;}
+.allpaid{margin-top:14px;padding:13px;background:#eaf4ea;border:1px solid #bcdcbc;border-radius:10px;
+  text-align:center;font-weight:700;color:#2e7d32;}
+
+/* password overlay */
+.pw-overlay{position:fixed;inset:0;background:rgba(20,15,10,.55);display:none;align-items:center;justify-content:center;z-index:500;padding:24px;}
+.pw-overlay.show{display:flex;}
+.pw-box{background:var(--paper);border:1.5px solid var(--ink);border-radius:16px;padding:24px 22px;width:100%;max-width:340px;box-shadow:var(--shadow);}
+.pw-title{font-family:'Noto Serif TC',serif;font-size:20px;margin-bottom:14px;}
+.pw-box input{width:100%;box-sizing:border-box;border:1.5px solid var(--line);border-radius:9px;padding:11px 13px;font-size:15px;font-family:inherit;outline:none;background:var(--card);color:var(--ink);}
+.pw-box input:focus{border-color:var(--accent);}
+.pw-err{color:var(--chili);font-size:13px;font-weight:600;min-height:18px;margin-top:8px;}
+.pw-actions{display:flex;gap:10px;margin-top:10px;}
+.pw-actions button{flex:1;padding:11px;border-radius:9px;font-weight:800;font-family:inherit;font-size:14px;cursor:pointer;}
+#pw-cancel{background:var(--card);border:1.5px solid var(--ink);color:var(--ink);}
+#pw-ok{background:var(--accent);border:1.5px solid var(--ink);color:var(--ink);}
+
+/* toast + loading */
+#loading-bar{position:fixed;top:0;left:0;width:100%;height:3px;background:var(--accent);z-index:999;opacity:0;transition:opacity .3s;}
+#toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(16px);
+  background:var(--ink);color:var(--paper);padding:11px 20px;border-radius:999px;font-size:14px;font-weight:600;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:600;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:90vw;text-align:center;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <div class="eyebrow">Lunch Box Order</div>
+      <h1>午餐訂便當<span class="accent">．</span>2026年8月</h1>
+    </div>
+    <div class="top-right">
+      每日 <b>09:30</b> 截單，逾時不候<br>
+      請於菜單內填寫欲訂購數量
+    </div>
+  </header>
+
+  <div class="namebar">
+    <label for="orderer-name">訂購人姓名</label>
+    <input id="orderer-name" type="text" placeholder="請輸入您的姓名（送出訂單時會用到）">
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="order">訂購</button>
+    <button class="tab-btn" data-tab="summary">訂單總表</button>
+    <button class="tab-btn" data-tab="payment">收款</button>
+    <button class="lock-btn" id="lock-btn" title="管理模式">🔒</button>
+  </div>
+
+  <div class="view active" id="view-order">
+  <div class="admin-bar" id="admin-bar" style="display:none">
+    <button class="btn-mini" id="proxy-btn">＋ 代人訂購</button>
+    <span class="admin-hint">管理模式：可代訂、可在「訂單總表」刪單／清整天</span>
+  </div>
+  <div class="proxy-banner" id="proxy-banner" style="display:none"></div>
+  <div class="cal-label">選擇日期</div>
+  <div class="calendar" id="calendar"></div>
+
+  <div id="content"></div>
+  </div>
+
+  <div class="view" id="view-summary"></div>
+  <div class="view" id="view-payment"></div>
+
+</div>
+
+<div class="cart-bar" id="cart-bar" style="display:none;">
+  <div class="cart-summary" id="cart-toggle">
+    <div>
+      <div class="count" id="cart-count">尚未選購品項</div>
+      <div class="total">$<span id="cart-total">0</span> <small>合計</small></div>
+    </div>
+    <div class="cart-actions">
+      <button class="btn btn-ghost" id="clear-btn">清空</button>
+      <button class="btn btn-primary" id="submit-btn">送出訂單</button>
+    </div>
+  </div>
+  <div class="order-note-wrap"><input id="order-note" type="text" placeholder="特殊要求（不要辣、不要香菜…），可留空" autocomplete="off"></div>
+  <div class="cart-detail" id="cart-detail"><ul id="cart-list"></ul></div>
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal">
+    <h3>訂單內容</h3>
+    <textarea id="order-text" readonly></textarea>
+    <div class="copied-note" id="copied-note">&nbsp;</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="modal-close">關閉</button>
+      <button class="btn btn-primary" id="copy-btn">複製訂單</button>
+    </div>
+  </div>
+</div>
+
+<footer class="foot">
+  資料整理自公司便當訂購表・如發現店家或菜單有誤，請回報表單管理人員
+</footer>
+
+<script id="app-data" type="application/json">
+{"calendar": {"2026-08-03": "炬 日式烤肉飯", "2026-08-04": "金仙蝦捲", "2026-08-05": "饕天餐盒", "2026-08-06": "IG愛雞 土雞肉飯", "2026-08-07": "午集食堂", "2026-08-10": "阿里山鐵路便當", "2026-08-11": "明月自助餐", "2026-08-12": "豐米便當", "2026-08-13": "蔡菜小菜牛肉拉麵", "2026-08-14": "八方雲集", "2026-08-17": "車站腿庫飯", "2026-08-18": "御史園魯肉飯", "2026-08-19": "太合子鍋貼、水餃專賣店", "2026-08-20": "三兄弟烤肉飯", "2026-08-21": "金湯丸豬腸冬粉", "2026-08-24": "嗡嗡嗡鐵路便當", "2026-08-25": "來呷便當", "2026-08-26": "胖子食堂", "2026-08-27": "Q將精緻燒臘快餐", "2026-08-28": "玉莊南越美食", "2026-08-31": "嗡嗡嗡鐵路便當"}, "stores": {"御史園魯肉飯": {"phone": "2293-5026", "mobile": null, "address": "五股區自強路148號", "closed": null, "min_order": null, "note": "便當價格調整5元"}, "IG愛雞 土雞肉飯": {"phone": "2297-7999", "mobile": null, "address": "泰山區明志路二段33號", "closed": null, "min_order": "500元", "note": "訂餐時間早上11點"}, "八方雲集": {"phone": "2900-5577", "mobile": null, "address": "泰山區明志路二段48號", "closed": null, "min_order": "300元", "note": null}, "明月自助餐": {"phone": "2909-2186\n2297-5593", "mobile": null, "address": "泰山區明志路一段17號", "closed": null, "min_order": "6個", "note": "價錢已更新"}, "玉莊南越美食": {"phone": "02-2204-5248", "mobile": "0976-263-811", "address": "泰山區公園路2號", "closed": "週二", "min_order": "500元", "note": null}, "Q將精緻燒臘快餐": {"phone": null, "mobile": "0901-382-151", "address": "泰山區明志路一段495-1號", "closed": null, "min_order": "6個", "note": "訂餐時間早上10:00前"}, "豐米便當": {"phone": "2900-2718", "mobile": "0910-174-113", "address": "泰山區明志路一段313號", "closed": null, "min_order": "3個", "note": null}, "嗡嗡嗡鐵路便當": {"phone": "2296-9989\n2297-9595", "mobile": null, "address": "泰山區明志路一段367號", "closed": null, "min_order": "4個", "note": "價錢已更新"}, "蔡菜小菜牛肉拉麵": {"phone": null, "mobile": "0939-681-733\n0955-270-537", "address": "泰山區明志路一段141號", "closed": "週二", "min_order": "400元", "note": "訂餐時間早上10:30前"}, "三兄弟烤肉飯": {"phone": "8531-5171", "mobile": "0979-001-033", "address": "泰山區全興路", "closed": null, "min_order": "500元", "note": null}, "來呷便當": {"phone": 222963386, "mobile": null, "address": "泰山區泰林路二段542之一號", "closed": "週日", "min_order": "5個", "note": "訂餐時間早上10:30前"}, "金仙蝦捲": {"phone": "2908-0128", "mobile": null, "address": "泰山區貴子路17-1號", "closed": null, "min_order": "500元", "note": "新店家"}, "車站腿庫飯": {"phone": "2296-6079", "mobile": null, "address": "泰山區明志路一段373號", "closed": null, "min_order": "4個", "note": "價錢已更新"}, "午集食堂": {"phone": "02-8292-1886", "mobile": null, "address": "五股區民義路一段5號", "closed": "週日", "min_order": "3個2.5公里內", "note": null}, "金湯丸豬腸冬粉": {"phone": null, "mobile": "0979-499-723", "address": "五股區成泰路一段70號", "closed": "週一", "min_order": "300元(視距離而定)", "note": null}, "胖子食堂": {"phone": "2296-9689", "mobile": null, "address": "泰山區仁愛路36-6號1樓", "closed": null, "min_order": "800元", "note": "訂餐時間早上10:00"}, "炬 日式烤肉飯": {"phone": "2297-7399", "mobile": null, "address": "泰山區明志路一段285號", "closed": null, "min_order": "600元", "note": null}, "阿里山鐵路便當": {"phone": "8921-2889", "mobile": null, "address": "泰山區明志路二段31號", "closed": null, "min_order": "6個", "note": "雙主餐漲10元，其他價錢維持"}, "太合子鍋貼、水餃專賣店": {"phone": null, "mobile": "0971-801-173", "address": "五股區登林路71號", "closed": null, "min_order": null, "note": "價錢已更新，訂餐時間10:40左右"}, "饕天餐盒": {"phone": null, "mobile": "0981-386-815", "address": "泰山區泰林路二段379號", "closed": null, "min_order": "滿800元3公里內", "note": "滿800元3公里內可以送  超過3公里 每一公里需要多200的訂餐金額！"}}, "menus": {"炬 日式烤肉飯": [{"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞肉飯 肉增量半份 +20", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞肉飯 肉增量1份 +40", "p": 139}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞肉飯 原味 +40", "p": 99}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞肉飯 泡菜 +40", "p": 99}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞肉飯 泰式 +40", "p": 99}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞肉飯 麻辣 +40", "p": 99}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞肉飯 蝦味魚子 +40", "p": 99}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤燒肉飯 肉增量半份 +20", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤燒肉飯 肉增量1份 +40", "p": 139}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤燒肉飯 原味 +40", "p": 99}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤燒肉飯 泡菜 +40", "p": 99}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤燒肉飯 泰式 +40", "p": 99}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤燒肉飯 麻辣 +40", "p": 99}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤燒肉飯 蝦味魚子 +40", "p": 99}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤牛肉飯 肉增量半份 +30", "p": 149}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤牛肉飯 肉增量1份 +60", "p": 179}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤牛肉飯 原味 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤牛肉飯 泡菜 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤牛肉飯 泰式 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤牛肉飯 麻辣 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤牛肉飯 蝦味魚子 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞腿排飯 原味 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞腿排飯 泡菜 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞腿排飯 泰式 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞腿排飯 麻辣 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤雞腿排飯 蝦味魚子 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "鹽烤豬肉飯 原味 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "鹽烤豬肉飯 泡菜 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "鹽烤豬肉飯 泰式 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "鹽烤豬肉飯 麻辣 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "鹽烤豬肉飯 蝦味魚子 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤鯖魚飯 原味 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤鯖魚飯 泡菜 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤鯖魚飯 泰式 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤鯖魚飯 麻辣 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "烤鯖魚飯 蝦味魚子 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "戰斧豬排飯 原味 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "戰斧豬排飯 泡菜 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "戰斧豬排飯 泰式 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "戰斧豬排飯 麻辣 +60", "p": 119}, {"c": "精緻盒餐系列 (附三樣配菜+半顆溏心蛋)", "n": "戰斧豬排飯 蝦味魚子 +60", "p": 119}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "豚雞雙拼飯 泡菜 +60", "p": 129}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "豚雞雙拼飯 泰式 +60", "p": 129}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "豚雞雙拼飯 麻辣 +60", "p": 129}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "豚雞雙拼飯 蝦味魚子 +60", "p": 129}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "豚牛雙拼飯 泡菜 +60", "p": 139}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "豚牛雙拼飯 泰式 +60", "p": 139}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "豚牛雙拼飯 麻辣 +60", "p": 139}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "豚牛雙拼飯 蝦味魚子 +60", "p": 139}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "牛雞雙拼飯 泡菜 +60", "p": 139}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "牛雞雙拼飯 泰式 +60", "p": 139}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "牛雞雙拼飯 麻辣 +60", "p": 139}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "牛雞雙拼飯 蝦味魚子 +60", "p": 139}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "炙燒腿豚雙拼飯 泡菜 +60", "p": 149}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "炙燒腿豚雙拼飯 泰式 +60", "p": 149}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "炙燒腿豚雙拼飯 麻辣 +60", "p": 149}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "炙燒腿豚雙拼飯 蝦味魚子 +60", "p": 149}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "炙燒腿牛雙拼飯 泡菜 +60", "p": 149}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "炙燒腿牛雙拼飯 泰式 +60", "p": 149}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "炙燒腿牛雙拼飯 麻辣 +60", "p": 149}, {"c": "超值雙拼 (附三樣配菜+半顆溏心蛋) 原味+任一口味", "n": "炙燒腿牛雙拼飯 蝦味魚子 +60", "p": 149}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒牛雞雙饗丼 泡菜 +60", "p": 109}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒牛雞雙饗丼 泰式 +60", "p": 109}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒牛雞雙饗丼 麻辣 +60", "p": 109}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒牛雞雙饗丼 蝦味魚子 +60", "p": 109}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒腿牛雙饗丼 泡菜 +60", "p": 139}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒腿牛雙饗丼 泰式 +60", "p": 139}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒腿牛雙饗丼 麻辣 +60", "p": 139}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒腿牛雙饗丼 蝦味魚子 +60", "p": 139}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒牛豚雙饗丼 泡菜 +60", "p": 119}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒牛豚雙饗丼 泰式 +60", "p": 119}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒牛豚雙饗丼 麻辣 +60", "p": 119}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒牛豚雙饗丼 蝦味魚子 +60", "p": 119}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒腿豚雙饗丼 泡菜 +60", "p": 129}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒腿豚雙饗丼 泰式 +60", "p": 129}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒腿豚雙饗丼 麻辣 +60", "p": 129}, {"c": "雙饗丼系列 (附蜜汁柴魚酥、半顆溏心蛋) 鹽蔥+任一口味", "n": "炙燒腿豚雙饗丼 蝦味魚子 +60", "p": 129}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞肉丼 肉增量半份 +20", "p": 89}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞肉丼 肉增量1份 +40", "p": 109}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞肉丼 鹽蔥 +40", "p": 69}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞肉丼 泡菜 +40", "p": 69}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞肉丼 泰式 +40", "p": 69}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞肉丼 麻辣 +40", "p": 69}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞肉丼 蝦味魚子 +40", "p": 69}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤燒肉丼 肉增量半份 +20", "p": 99}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤燒肉丼 肉增量1份 +40", "p": 119}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤燒肉丼 鹽蔥 +40", "p": 79}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤燒肉丼 泡菜 +40", "p": 79}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤燒肉丼 泰式 +40", "p": 79}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤燒肉丼 麻辣 +40", "p": 79}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤燒肉丼 蝦味魚子 +40", "p": 79}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤牛肉丼 肉增量半份 +30", "p": 129}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤牛肉丼 肉增量1份 +60", "p": 159}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤牛肉丼 鹽蔥 +60", "p": 99}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤牛肉丼 泡菜 +60", "p": 99}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤牛肉丼 泰式 +60", "p": 99}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤牛肉丼 麻辣 +60", "p": 99}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤牛肉丼 蝦味魚子 +60", "p": 99}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞腿丼 鹽蔥 +60", "p": 99}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞腿丼 泡菜 +60", "p": 99}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞腿丼 泰式 +60", "p": 99}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞腿丼 麻辣 +60", "p": 99}, {"c": "丼飯系列(附蜜汁柴魚酥)", "n": "烤雞腿丼 蝦味魚子 +60", "p": 99}, {"c": "套餐加購+40", "n": "飲品5選1 味噌貢丸湯 +60", "p": 20}, {"c": "套餐加購+40", "n": "飲品5選1 冷香四季春茶 +60", "p": 20}, {"c": "套餐加購+40", "n": "飲品5選1 檸檬冬瓜露 +60", "p": 20}, {"c": "套餐加購+40", "n": "飲品5選1 可樂 +60", "p": 20}, {"c": "套餐加購+40", "n": "飲品5選1 雪碧 +60", "p": 20}, {"c": "套餐加購+40", "n": "銅鑼燒4選1 卡士達奶油 +60", "p": 20}, {"c": "套餐加購+40", "n": "銅鑼燒4選1 老鷹紅豆 +60", "p": 20}, {"c": "套餐加購+40", "n": "銅鑼燒4選1 楓糖奶油 +60", "p": 20}, {"c": "套餐加購+40", "n": "銅鑼燒4選1 海鹽焦糖 +60", "p": 20}, {"c": "單點加購", "n": "銅鑼燒4選1 炙燒牛肉 +60", "p": 69}, {"c": "單點加購", "n": "銅鑼燒4選1 戰斧豬排 +60", "p": 69}, {"c": "單點加購", "n": "銅鑼燒4選1 炙烤雞腿 +60", "p": 59}, {"c": "單點加購", "n": "銅鑼燒4選1 鹽烤豬肉 +60", "p": 59}, {"c": "單點加購", "n": "銅鑼燒4選1 炙燒豚肉 +60", "p": 49}, {"c": "單點加購", "n": "銅鑼燒4選1 燒烤鯖魚 +60", "p": 49}, {"c": "單點加購", "n": "銅鑼燒4選1 炙烤雞肉 +60", "p": 49}, {"c": "單點加購", "n": "銅鑼燒4選1 白飯 +60", "p": 15}, {"c": "單點加購", "n": "銅鑼燒4選1 銅鑼燒 +60", "p": 15}, {"c": "單點加購", "n": "銅鑼燒4選1 可樂 +60", "p": 30}, {"c": "單點加購", "n": "銅鑼燒4選1 雪碧 +60", "p": 30}, {"c": "單點加購", "n": "銅鑼燒4選1 溏心蛋 +60", "p": 30}, {"c": "單點加購", "n": "銅鑼燒4選1 泡菜 +60", "p": 30}, {"c": "單點加購", "n": "銅鑼燒4選1 四季春茶 +60", "p": 50}, {"c": "單點加購", "n": "銅鑼燒4選1 檸檬冬瓜露 +60", "p": 50}, {"c": "單點加購", "n": "銅鑼燒4選1 貢丸味噌湯 +60", "p": 50}], "金仙蝦捲": [{"c": "飯類", "n": "小滷肉飯", "p": 35}, {"c": "飯類", "n": "大滷肉飯", "p": 45}, {"c": "飯類", "n": "蝦捲飯", "p": 120}, {"c": "飯類", "n": "排骨飯", "p": 120}, {"c": "飯類", "n": "炸雞腿飯", "p": 120}, {"c": "飯類", "n": "滷雞腿飯", "p": 120}, {"c": "飯類", "n": "控肉飯", "p": 100}, {"c": "飯類", "n": "滷肉便當", "p": 65}, {"c": "湯類", "n": "魚丸湯", "p": 45}, {"c": "湯類", "n": "蝦仁湯", "p": 55}, {"c": "湯類", "n": "綜合湯", "p": 55}, {"c": "單點", "n": "蝦捲(三條)", "p": 50}, {"c": "單點", "n": "排骨", "p": 70}, {"c": "單點", "n": "炸雞腿", "p": 80}, {"c": "單點", "n": "滷雞腿", "p": 80}, {"c": "單點", "n": "控肉", "p": 60}, {"c": "單點", "n": "白菜滷", "p": 40}, {"c": "單點", "n": "滷筍絲", "p": 40}, {"c": "單點", "n": "燙青菜", "p": 40}, {"c": "單點", "n": "油豆腐", "p": 15}, {"c": "單點", "n": "滷鴨蛋", "p": 15}], "饕天餐盒": [{"c": "舒肥/水煮系列", "n": "高蛋白雙倍雞胸", "p": 149}, {"c": "舒肥/水煮系列", "n": "老饕霸王腿", "p": 149}, {"c": "舒肥/水煮系列", "n": "胡麻牛五花", "p": 139}, {"c": "舒肥/水煮系列", "n": "炙燒松阪豬", "p": 149}, {"c": "舒肥/水煮系列", "n": "老饕雞胸", "p": 105}, {"c": "舒肥/水煮系列", "n": "墨西哥手撕雞", "p": 109}, {"c": "舒肥/水煮系列", "n": "椒鹽梅花豬", "p": 129}, {"c": "舒肥/水煮系列", "n": "海鹽牛五花", "p": 129}, {"c": "舒肥/水煮系列", "n": "彈彈好蝦", "p": 149}, {"c": "舒肥/水煮系列", "n": "膠原金目鱸", "p": 149}, {"c": "舒肥/水煮系列", "n": "宜蘭櫻桃鴨胸", "p": 179}, {"c": "舒肥/水煮系列", "n": "歐米加鮭魚菲力", "p": 199}, {"c": "蔬食系列 (無肉)", "n": "基礎餐盒", "p": 90}, {"c": "蔬食系列 (無肉)", "n": "饕饕烤櫛瓜", "p": 110}, {"c": "蔬食系列 (無肉)", "n": "杏鮑菇菇寶貝", "p": 110}, {"c": "緊繃推薦", "n": "腿胸雞大滿貫", "p": 189}, {"c": "緊繃推薦", "n": "雞豬組合", "p": 149}, {"c": "緊繃推薦", "n": "松蝦炙玖雙拼", "p": 199}, {"c": "緊繃推薦", "n": "鴨胸鮭魚緊繃雙拼", "p": 279}, {"c": "主餐區", "n": "老饕雞胸", "p": 49}, {"c": "主餐區", "n": "椒鹽梅花豬", "p": 49}, {"c": "主餐區", "n": "墨西哥手撕雞", "p": 59}, {"c": "主餐區", "n": "海鹽牛五花", "p": 59}, {"c": "主餐區", "n": "胡麻牛五花", "p": 69}, {"c": "主餐區", "n": "炙燒松阪豬", "p": 79}, {"c": "主餐區", "n": "彈彈好蝦", "p": 79}, {"c": "主餐區", "n": "膠原金目鱸", "p": 79}, {"c": "主餐區", "n": "老饕霸王腿", "p": 89}, {"c": "主餐區", "n": "照燒霸王腿", "p": 99}, {"c": "主餐區", "n": "宜蘭櫻桃鴨胸", "p": 109}, {"c": "主餐區", "n": "鮭魚菲力", "p": 119}, {"c": "配料區", "n": "水煮蛋", "p": 15}, {"c": "配料區", "n": "烤地瓜塊", "p": 20}, {"c": "配料區", "n": "藜麥飯", "p": 20}, {"c": "配料區", "n": "蔬菜", "p": 30}, {"c": "配料區", "n": "杏鮑菇菇", "p": 30}, {"c": "配料區", "n": "炙烤櫛瓜", "p": 30}, {"c": "下飯區", "n": "老饕胡麻醬", "p": 10}, {"c": "下飯區", "n": "黃金香蒜片", "p": 29}, {"c": "下飯區", "n": "韓式泡菜", "p": 39}, {"c": "瓶裝原味冷泡茶", "n": "日式蕎麥茶", "p": 20}, {"c": "瓶裝原味冷泡茶", "n": "芭樂芯葉茶", "p": 29}, {"c": "瓶裝原味冷泡茶", "n": "柚香覺青茶", "p": 29}, {"c": "瓶裝原味冷泡茶", "n": "漢方美顏茶", "p": 29}], "IG愛雞 土雞肉飯": [{"c": "便當類 (附兩菜一蛋)百元以上可換糖心蛋", "n": "海鹽雞腿飯", "p": 130}, {"c": "便當類 (附兩菜一蛋)百元以上可換糖心蛋", "n": "燻茶雞腿飯", "p": 130}, {"c": "便當類 (附兩菜一蛋)百元以上可換糖心蛋", "n": "海鹽雞肉飯", "p": 110}, {"c": "便當類 (附兩菜一蛋)百元以上可換糖心蛋", "n": "燻茶雞肉飯", "p": 110}, {"c": "便當類 (附兩菜一蛋)百元以上可換糖心蛋", "n": "海鹽雞翅飯", "p": 115}, {"c": "便當類 (附兩菜一蛋)百元以上可換糖心蛋", "n": "燻茶雞翅飯", "p": 115}, {"c": "便當類 (附兩菜一蛋)百元以上可換糖心蛋", "n": "黯然飯", "p": 105}, {"c": "便當類 (附兩菜一蛋)百元以上可換糖心蛋", "n": "銷魂飯", "p": 75}, {"c": "便當類 (附兩菜一蛋)百元以上可換糖心蛋", "n": "雙響消魂飯(海鹽+燻茶)", "p": 115}, {"c": "便當類 (附兩菜一蛋)百元以上可換糖心蛋", "n": "燒肉飯", "p": 100}, {"c": "其他", "n": "雞油飯", "p": 20}, {"c": "其他", "n": "雞絲飯", "p": 40}, {"c": "其他", "n": "白飯", "p": 10}, {"c": "其他", "n": "滷白菜", "p": 40}, {"c": "其他", "n": "滷筍絲", "p": 40}, {"c": "其他", "n": "高麗菜", "p": 35}, {"c": "其他", "n": "油豆腐", "p": 25}, {"c": "其他", "n": "豆干", "p": 25}, {"c": "其他", "n": "海帶", "p": 25}, {"c": "其他", "n": "荷包蛋", "p": 15}, {"c": "其他", "n": "糖心蛋", "p": 25}, {"c": "其他", "n": "燒肉", "p": 55}, {"c": "其他", "n": "雞翅", "p": 40}, {"c": "其他", "n": "雞爪(1支)", "p": 5}, {"c": "其他", "n": "七里香(1顆)", "p": 5}, {"c": "其他", "n": "鳳爪", "p": 55}, {"c": "其他", "n": "豬頭皮", "p": 55}, {"c": "湯類", "n": "鴨肉丸湯", "p": 35}, {"c": "湯類", "n": "下水湯", "p": 35}, {"c": "湯類", "n": "竹筍湯(夏季限定)", "p": 35}, {"c": "湯類", "n": "味增湯(冬季限定)", "p": 35}, {"c": "去骨雞肉切盤", "n": "小雞腿", "p": 100}, {"c": "去骨雞肉切盤", "n": "大雞腿", "p": 200}, {"c": "去骨雞肉切盤", "n": "小雞肉", "p": 80}, {"c": "去骨雞肉切盤", "n": "大雞肉", "p": 160}], "午集食堂": [{"c": null, "n": "黃金酥炸排骨飯", "p": 100}, {"c": null, "n": "咬下去會嫩棒腿飯", "p": 100}, {"c": null, "n": "慢慢燉控肉飯", "p": 100}, {"c": null, "n": "霸道香腸飯", "p": 80}, {"c": null, "n": "夠味滷肉飯", "p": 80}, {"c": "加購區", "n": "炸排骨", "p": 50}, {"c": "加購區", "n": "炸棒棒腿", "p": 50}, {"c": "加購區", "n": "白飯", "p": 10}], "阿里山鐵路便當": [{"c": "經典雙主餐", "n": "傳統炸棒腿", "p": 110}, {"c": "經典雙主餐", "n": "滷棒腿", "p": 110}, {"c": "傳統炸棒腿便當", "n": "滷棒腿", "p": 80}, {"c": "滷棒腿便當", "n": "滷棒腿", "p": 80}, {"c": "滷排骨便當", "n": "滷棒腿", "p": 80}, {"c": "炸排骨便當", "n": "滷棒腿", "p": 80}, {"c": "紅燒肉便當", "n": "滷棒腿", "p": 80}, {"c": "炸鱈魚便當", "n": "滷棒腿", "p": 80}, {"c": "炸蝦捲便當", "n": "滷棒腿", "p": 80}, {"c": "香腸便當", "n": "滷棒腿", "p": 80}, {"c": "單點", "n": "滷排骨", "p": 45}, {"c": "單點", "n": "炸排骨", "p": 45}, {"c": "單點", "n": "傳統炸棒腿", "p": 45}, {"c": "單點", "n": "滷棒腿", "p": 45}, {"c": "單點", "n": "紅燒肉", "p": 45}, {"c": "單點", "n": "炸鱈魚排", "p": 45}, {"c": "單點", "n": "炸蝦捲", "p": 45}, {"c": "單點", "n": "香腸", "p": 45}, {"c": "單點", "n": "青菜", "p": 30}, {"c": "單點", "n": "滷蛋", "p": 15}, {"c": "單點", "n": "白飯", "p": 10}], "明月自助餐": [{"c": "便當", "n": "炸雞腿便當", "p": 110}, {"c": "便當", "n": "滷雞腿便當", "p": 110}, {"c": "便當", "n": "排骨便當", "p": 100}, {"c": "便當", "n": "焢肉便當", "p": 100}, {"c": "便當", "n": "吳郭魚便當", "p": 100}, {"c": "便當", "n": "鱈魚便當", "p": 100}, {"c": "便當", "n": "腳蹄便當", "p": 100}, {"c": "便當", "n": "豬腳中段便當", "p": 110}, {"c": "便當", "n": "紅糟排骨便當", "p": 110}, {"c": "便當", "n": "五菜合飯", "p": 65}, {"c": "單點", "n": "排骨", "p": 60}, {"c": "單點", "n": "雞腿", "p": 65}, {"c": "單點", "n": "焢肉", "p": 60}, {"c": "單點", "n": "腳蹄", "p": 60}, {"c": "單點", "n": "豬腳中段", "p": 65}, {"c": "單點", "n": "紅糟排骨", "p": 65}, {"c": "單點", "n": "鱈魚", "p": 60}, {"c": "單點", "n": "吳郭魚", "p": 60}, {"c": "單點", "n": "油豆腐", "p": 15}, {"c": "單點", "n": "滷蛋", "p": 10}], "豐米便當": [{"c": null, "n": "飯菜(無主菜)", "p": 80}, {"c": null, "n": "明蝦飯", "p": 75}, {"c": null, "n": "花枝排飯", "p": 80}, {"c": null, "n": "香腸飯", "p": 85}, {"c": null, "n": "蒲燒金鯛魚飯", "p": 85}, {"c": null, "n": "蝦捲飯", "p": 85}, {"c": null, "n": "排骨飯", "p": 100}, {"c": null, "n": "焢肉飯", "p": 100}, {"c": null, "n": "招牌飯", "p": 100}, {"c": null, "n": "滷棒棒腿飯", "p": 100}, {"c": null, "n": "素食餐", "p": 90}, {"c": null, "n": "燒肉飯", "p": 100}, {"c": null, "n": "炸棒棒腿飯", "p": 100}, {"c": null, "n": "哈啦雞腿排飯", "p": 95}, {"c": null, "n": "炸丁骨排飯", "p": 105}, {"c": null, "n": "滷丁骨排飯", "p": 105}, {"c": null, "n": "鯖魚飯", "p": 105}, {"c": null, "n": "蔥爆豬肉飯", "p": 110}, {"c": null, "n": "牛肉飯", "p": 110}, {"c": null, "n": "鐵路便當", "p": 110}, {"c": null, "n": "鮭魚飯", "p": 120}, {"c": null, "n": "雞排飯", "p": 130}, {"c": null, "n": "雞腿飯", "p": 130}, {"c": null, "n": "糖醋排骨燴飯", "p": 130}, {"c": null, "n": "黑胡椒牛柳燴飯", "p": 130}, {"c": null, "n": "三杯雞燴飯", "p": 130}, {"c": null, "n": "豐米特餐", "p": 180}], "蔡菜小菜牛肉拉麵": [{"c": "養生牛筋麵", "n": "大 拉麵", "p": 180}, {"c": "養生牛筋麵", "n": "大 陽春麵", "p": 180}, {"c": "養生牛肚麵", "n": "大 拉麵", "p": 180}, {"c": "養生牛肚麵", "n": "大 陽春麵", "p": 180}, {"c": "養生牛肉麵", "n": "小 拉麵", "p": 120}, {"c": "養生牛肉麵", "n": "小 陽春麵", "p": 120}, {"c": "養生牛肉麵", "n": "大 拉麵", "p": 130}, {"c": "養生牛肉麵", "n": "大 陽春麵", "p": 130}, {"c": "養生牛3寶麵", "n": "小 拉麵", "p": 150}, {"c": "養生牛3寶麵", "n": "小 陽春麵", "p": 150}, {"c": "養生牛3寶麵", "n": "大 拉麵", "p": 160}, {"c": "養生牛3寶麵", "n": "大 陽春麵", "p": 160}, {"c": "牛肉湯麵", "n": "小 拉麵", "p": 70}, {"c": "牛肉湯麵", "n": "小 陽春麵", "p": 70}, {"c": "牛肉湯麵", "n": "大 拉麵", "p": 80}, {"c": "牛肉湯麵", "n": "大 陽春麵", "p": 80}, {"c": "乾榨菜肉絲麵", "n": "小 拉麵", "p": 70}, {"c": "乾榨菜肉絲麵", "n": "小 陽春麵", "p": 70}, {"c": "乾榨菜肉絲麵", "n": "大 拉麵", "p": 85}, {"c": "乾榨菜肉絲麵", "n": "大 陽春麵", "p": 85}, {"c": "湯榨菜肉絲麵", "n": "小 拉麵", "p": 70}, {"c": "湯榨菜肉絲麵", "n": "小 陽春麵", "p": 70}, {"c": "湯榨菜肉絲麵", "n": "大 拉麵", "p": 85}, {"c": "湯榨菜肉絲麵", "n": "大 陽春麵", "p": 85}, {"c": "東北乾拌牛肉麵", "n": "小 拉麵", "p": 100}, {"c": "東北乾拌牛肉麵", "n": "小 陽春麵", "p": 100}, {"c": "東北乾拌牛肉麵", "n": "大 拉麵", "p": 115}, {"c": "東北乾拌牛肉麵", "n": "大 陽春麵", "p": 115}, {"c": "老北京炸醬麵", "n": "小 拉麵", "p": 70}, {"c": "老北京炸醬麵", "n": "小 陽春麵", "p": 70}, {"c": "老北京炸醬麵", "n": "大 拉麵", "p": 85}, {"c": "老北京炸醬麵", "n": "大 陽春麵", "p": 85}, {"c": "香辣擔擔麵", "n": "大 拉麵", "p": 75}, {"c": "香辣擔擔麵", "n": "大 陽春麵", "p": 75}, {"c": "牛肉湯", "n": "大 陽春麵", "p": 110}, {"c": "貢丸湯", "n": "大 陽春麵", "p": 40}, {"c": "蛋花湯", "n": "大 陽春麵", "p": 30}, {"c": "貢丸蛋花湯", "n": "大 陽春麵", "p": 65}, {"c": "牛肉湯餃 (1份7粒)", "n": "大 高麗菜", "p": 70}, {"c": "牛肉湯餃 (1份7粒)", "n": "大 韭菜", "p": 70}, {"c": "手工水餃 (1份10粒)", "n": "大 高麗菜", "p": 70}, {"c": "手工水餃 (1份10粒)", "n": "大 韭菜", "p": 70}, {"c": "阿嬤的魯肉飯", "n": "大 小", "p": 40}, {"c": "阿嬤的魯肉飯", "n": "大", "p": 55}, {"c": "牛肉飯", "n": "大 小", "p": 100}, {"c": "牛肉飯", "n": "大", "p": 115}, {"c": "煙燻無骨鳳爪", "n": "大", "p": 85}, {"c": "牛嘴邊肉", "n": "大", "p": 120}, {"c": "金錢牛肚", "n": "大", "p": 120}, {"c": "醃小黃瓜", "n": "大", "p": 40}, {"c": "豬耳朵", "n": "大", "p": 40}, {"c": "皮蛋豆腐", "n": "大", "p": 50}, {"c": "油豆腐", "n": "大", "p": 30}, {"c": "豆干一份", "n": "大", "p": 20}, {"c": "海帶一份", "n": "大", "p": 20}, {"c": "魯蛋一顆", "n": "大", "p": 15}, {"c": "當日時蔬", "n": "大", "p": 35}, {"c": "拉餅(一份2片)", "n": "大 地瓜", "p": 50}, {"c": "拉餅(一份2片)", "n": "大 紅豆", "p": 50}, {"c": "拉餅(一份2片)", "n": "大 芋頭", "p": 50}, {"c": "拉餅(一份2片)", "n": "大 蔥花", "p": 50}, {"c": "拉餅(一份2片)", "n": "大 蔥肉", "p": 50}, {"c": "蔥油餅", "n": "大 -", "p": 40}, {"c": "蔥油餅", "n": "大 加蛋", "p": 50}, {"c": "蔥油餅", "n": "大 加蛋加起司", "p": 60}, {"c": "牛肉捲餅", "n": "大 加蛋加起司", "p": 130}, {"c": "冰紅茶", "n": "大 加蛋加起司", "p": 15}, {"c": "冰金桔檸檬愛玉", "n": "大 加蛋加起司", "p": 30}], "八方雲集": [{"c": "鍋貼類", "n": "招牌 6個", "p": 42}, {"c": "鍋貼類", "n": "招牌 8個", "p": 56}, {"c": "鍋貼類", "n": "招牌 10個", "p": 70}, {"c": "鍋貼類", "n": "招牌 15個", "p": 105}, {"c": "鍋貼類", "n": "韭菜 6個", "p": 42}, {"c": "鍋貼類", "n": "韭菜 8個", "p": 56}, {"c": "鍋貼類", "n": "韭菜 10個", "p": 70}, {"c": "鍋貼類", "n": "韭菜 15個", "p": 105}, {"c": "鍋貼類", "n": "韓式辣味 6個", "p": 42}, {"c": "鍋貼類", "n": "韓式辣味 8個", "p": 56}, {"c": "鍋貼類", "n": "韓式辣味 10個", "p": 70}, {"c": "鍋貼類", "n": "韓式辣味 15個", "p": 105}, {"c": "鍋貼類", "n": "咖哩雞肉 6個", "p": 42}, {"c": "鍋貼類", "n": "咖哩雞肉 8個", "p": 56}, {"c": "鍋貼類", "n": "咖哩雞肉 10個", "p": 70}, {"c": "鍋貼類", "n": "咖哩雞肉 15個", "p": 105}, {"c": "鍋貼類", "n": "玉米 6個", "p": 42}, {"c": "鍋貼類", "n": "玉米 8個", "p": 56}, {"c": "鍋貼類", "n": "玉米 10個", "p": 70}, {"c": "鍋貼類", "n": "玉米 15個", "p": 105}, {"c": "鍋貼類", "n": "新蔬食 6個", "p": 45}, {"c": "鍋貼類", "n": "新蔬食 8個", "p": 60}, {"c": "鍋貼類", "n": "新蔬食 10個", "p": 75}, {"c": "鍋貼類", "n": "新蔬食 15個", "p": 112.5}, {"c": "水餃類", "n": "招牌 6個", "p": 42}, {"c": "水餃類", "n": "招牌 8個", "p": 56}, {"c": "水餃類", "n": "招牌 10個", "p": 70}, {"c": "水餃類", "n": "招牌 15個", "p": 105}, {"c": "水餃類", "n": "韭菜 6個", "p": 42}, {"c": "水餃類", "n": "韭菜 8個", "p": 56}, {"c": "水餃類", "n": "韭菜 10個", "p": 70}, {"c": "水餃類", "n": "韭菜 15個", "p": 105}, {"c": "水餃類", "n": "韓式辣味 6個", "p": 42}, {"c": "水餃類", "n": "韓式辣味 8個", "p": 56}, {"c": "水餃類", "n": "韓式辣味 10個", "p": 70}, {"c": "水餃類", "n": "韓式辣味 15個", "p": 105}, {"c": "水餃類", "n": "咖哩雞肉 6個", "p": 42}, {"c": "水餃類", "n": "咖哩雞肉 8個", "p": 56}, {"c": "水餃類", "n": "咖哩雞肉 10個", "p": 70}, {"c": "水餃類", "n": "咖哩雞肉 15個", "p": 105}, {"c": "水餃類", "n": "玉米 6個", "p": 42}, {"c": "水餃類", "n": "玉米 8個", "p": 56}, {"c": "水餃類", "n": "玉米 10個", "p": 70}, {"c": "水餃類", "n": "玉米 15個", "p": 105}, {"c": "水餃類", "n": "新蔬食 6個", "p": 45}, {"c": "水餃類", "n": "新蔬食 8個", "p": 60}, {"c": "水餃類", "n": "新蔬食 10個", "p": 75}, {"c": "水餃類", "n": "新蔬食 15個", "p": 112.5}, {"c": "水餃類", "n": "鮮蝦 6個", "p": 63}, {"c": "水餃類", "n": "鮮蝦 8個", "p": 84}, {"c": "水餃類", "n": "鮮蝦 10個", "p": 105}, {"c": "水餃類", "n": "鮮蝦 15個", "p": 157.5}, {"c": "湯餃類", "n": "酸辣湯餃 (8顆)招牌 15個", "p": 90}, {"c": "湯餃類", "n": "酸辣湯餃 韭菜 15個", "p": 90}, {"c": "湯餃類", "n": "酸辣湯餃 韓式辣味 15個", "p": 90}, {"c": "湯餃類", "n": "酸辣湯餃 咖哩雞肉 15個", "p": 90}, {"c": "湯餃類", "n": "酸辣湯餃 玉米 15個", "p": 90}, {"c": "湯餃類", "n": "玉米湯餃(8顆) (8顆)招牌 15個", "p": 90}, {"c": "湯餃類", "n": "玉米湯餃(8顆) 韭菜 15個", "p": 90}, {"c": "湯餃類", "n": "玉米湯餃(8顆) 韓式辣味 15個", "p": 90}, {"c": "湯餃類", "n": "玉米湯餃(8顆) 咖哩雞肉 15個", "p": 90}, {"c": "湯餃類", "n": "玉米湯餃(8顆) 玉米 15個", "p": 90}, {"c": "紅燒清燉牛肉麵", "n": "紅燒牛肉麵 麵 15個", "p": 168}, {"c": "紅燒清燉牛肉麵", "n": "紅燒牛肉麵 冬粉 15個", "p": 168}, {"c": "紅燒清燉牛肉麵", "n": "清燉牛肉麵 麵 15個", "p": 168}, {"c": "紅燒清燉牛肉麵", "n": "清燉牛肉麵 冬粉 15個", "p": 168}, {"c": "紅燒清燉牛肉麵", "n": "麻辣牛肉麵 麵 15個", "p": 178}, {"c": "紅燒清燉牛肉麵", "n": "麻辣牛肉麵 冬粉 15個", "p": 178}, {"c": "牛湯餃", "n": "紅燒牛湯餃(8顆招) 冬粉 15個", "p": 120}, {"c": "牛湯餃", "n": "麻辣牛湯餃(8顆招) 冬粉 15個", "p": 125}, {"c": "牛湯餛飩類", "n": "紅燒牛湯珍珠餛飩(小顆10顆) 冬粉 15個", "p": 125}, {"c": "牛湯餛飩類", "n": "麻辣牛湯珍珠餛飩(小顆10顆) 冬粉 15個", "p": 130}, {"c": "牛湯餛飩類", "n": "紅燒牛湯菜肉大餛飩(大顆6顆) 冬粉 15個", "p": 125}, {"c": "牛湯餛飩類", "n": "麻辣牛湯菜肉大餛飩(大顆6顆) 冬粉 15個", "p": 130}, {"c": "乾麵類", "n": "古早味乾麵 冬粉 15個", "p": 45}, {"c": "乾麵類", "n": "招牌乾麵(微辣) 冬粉 15個", "p": 55}, {"c": "乾麵類", "n": "麻醬乾麵 冬粉 15個", "p": 55}, {"c": "乾麵類", "n": "紹辣乾麵 冬粉 15個", "p": 60}, {"c": "湯麵類", "n": "古早味湯麵 冬粉 15個", "p": 45}, {"c": "湯麵類", "n": "酸辣湯麵 冬粉 15個", "p": 70}, {"c": "湯麵類", "n": "珍珠餛飩麵 冬粉 15個", "p": 70}, {"c": "湯麵類", "n": "菜肉大餛飩麵 冬粉 15個", "p": 80}, {"c": "湯麵類", "n": "榨菜肉絲麵 冬粉 15個", "p": 80}, {"c": "湯麵類", "n": "紹辣珍珠餛飩麵 冬粉 15個", "p": 80}, {"c": "湯麵類", "n": "紹辣菜肉大餛飩麵 冬粉 15個", "p": 90}, {"c": "湯麵類", "n": "梁師傅排骨麵 冬粉 15個", "p": 105}, {"c": "抄手類", "n": "珍珠抄手(小顆8粒) 紅油 15個", "p": 60}, {"c": "抄手類", "n": "珍珠抄手(小顆8粒) 和風 15個", "p": 60}, {"c": "抄手類", "n": "菜肉大抄手(大顆6粒) 紅油 15個", "p": 75}, {"c": "抄手類", "n": "菜肉大抄手(大顆6粒) 和風 15個", "p": 75}, {"c": "湯品類", "n": "酸辣湯 和風 15個", "p": 35}, {"c": "湯品類", "n": "玉米濃湯 和風 15個", "p": 35}, {"c": "湯品類", "n": "旗魚花枝丸湯 和風 15個", "p": 40}, {"c": "湯品類", "n": "蘿蔔湯 和風 15個", "p": 35}, {"c": "湯品類", "n": "珍珠餛飩湯 和風 15個", "p": 50}, {"c": "湯品類", "n": "菜肉大餛飩湯 和風 15個", "p": 60}, {"c": "小菜類", "n": "滷蛋 和風 15個", "p": 15}, {"c": "小菜類", "n": "黃金泡菜 和風 15個", "p": 30}, {"c": "小菜類", "n": "涼拌豆腐 蠔油 15個", "p": 30}, {"c": "小菜類", "n": "涼拌豆腐 麻醬 15個", "p": 30}, {"c": "小菜類", "n": "涼拌豆腐 紅油 15個", "p": 30}, {"c": "小菜類", "n": "黃金豆腐 紅油 15個", "p": 35}, {"c": "小菜類", "n": "燙青菜 紅油 15個", "p": 35}, {"c": "小菜類", "n": "燉蘿蔔 紅油 15個", "p": 35}, {"c": "小菜類", "n": "薄鹽毛豆 紅油 15個", "p": 35}, {"c": "小菜類", "n": "和風秋葵 紅油 15個", "p": 35}, {"c": "小菜類", "n": "家常小菜 紅油 15個", "p": 40}, {"c": "小菜類", "n": "小菜雙拼 紅油 15個", "p": 40}, {"c": "小菜類", "n": "柚香蘿蔔 紅油 15個", "p": 40}, {"c": "小菜類", "n": "皮蛋豆腐(整粒) 紅油 15個", "p": 45}, {"c": "小菜類", "n": "古早味排骨 紅油 15個", "p": 68}, {"c": "飲料類", "n": "香濃豆漿 紅油 15個", "p": 20}, {"c": "飲料類", "n": "香濃豆漿(無加糖) 紅油 15個", "p": 20}, {"c": "飲料類", "n": "黑豆漿 紅油 15個", "p": 20}, {"c": "飲料類", "n": "真傳特調紅茶 紅油 15個", "p": 20}], "車站腿庫飯": [{"c": null, "n": "招牌飯", "p": 90}, {"c": null, "n": "蝦捲飯", "p": 90}, {"c": null, "n": "炸排骨飯", "p": 95}, {"c": null, "n": "滷排骨飯", "p": 95}, {"c": null, "n": "梅干控肉飯", "p": 95}, {"c": null, "n": "虱目魚飯", "p": 95}, {"c": null, "n": "腿庫飯", "p": 100}, {"c": null, "n": "每日特餐", "p": 100}, {"c": null, "n": "紅燒牛腩飯", "p": 100}, {"c": null, "n": "黑胡椒牛柳飯", "p": 100}, {"c": null, "n": "香煎鯖魚飯", "p": 120}, {"c": null, "n": "香酥雞排飯", "p": 110}, {"c": null, "n": "香酥雞腿飯", "p": 110}, {"c": null, "n": "蜜汁雞腿飯", "p": 110}, {"c": null, "n": "滷大雞腿飯", "p": 120}], "御史園魯肉飯": [{"c": "魚便當", "n": "吳郭魚", "p": 105}, {"c": "魚便當", "n": "紅目鰱", "p": 105}, {"c": "魚便當", "n": "鯛魚", "p": 105}, {"c": "炸雞腿便當", "n": "鯛魚", "p": 110}, {"c": "滷雞腿便當", "n": "鯛魚", "p": 110}, {"c": "紅燒肉便當", "n": "鯛魚", "p": 100}, {"c": "排骨便當", "n": "鯛魚", "p": 100}, {"c": "焢肉便當", "n": "鯛魚", "p": 100}, {"c": "大雞肉飯便當", "n": "鯛魚", "p": 95}, {"c": "雞肉飯便當", "n": "鯛魚", "p": 80}, {"c": "魯肉飯便當", "n": "鯛魚", "p": 80}, {"c": "雞肉飯", "n": "小", "p": 35}, {"c": "雞肉飯", "n": "大", "p": 50}, {"c": "魯肉飯", "n": "小", "p": 35}, {"c": "魯肉飯", "n": "大", "p": 50}, {"c": "乾麵", "n": "大", "p": 40}, {"c": "肉焿", "n": "湯", "p": 55}, {"c": "肉焿", "n": "米粉", "p": 65}, {"c": "肉焿", "n": "麵", "p": 65}, {"c": "肉焿", "n": "飯", "p": 65}, {"c": "魚丸湯", "n": "飯", "p": 35}, {"c": "苦瓜排骨湯", "n": "飯", "p": 55}, {"c": "蛤蜊排骨湯", "n": "飯", "p": 55}, {"c": "金針排骨湯", "n": "飯", "p": 55}, {"c": "四神豬腸湯", "n": "飯", "p": 55}], "太合子鍋貼、水餃專賣店": [{"c": "鍋貼類", "n": "翠高麗 6個", "p": 36}, {"c": "鍋貼類", "n": "翠高麗 8個", "p": 48}, {"c": "鍋貼類", "n": "翠高麗 10個", "p": 60}, {"c": "鍋貼類", "n": "翠高麗 15個", "p": 90}, {"c": "鍋貼類", "n": "香韭菜 6個", "p": 39}, {"c": "鍋貼類", "n": "香韭菜 8個", "p": 52}, {"c": "鍋貼類", "n": "香韭菜 10個", "p": 65}, {"c": "鍋貼類", "n": "香韭菜 15個", "p": 97.5}, {"c": "鍋貼類", "n": "辣韓式 6個", "p": 39}, {"c": "鍋貼類", "n": "辣韓式 8個", "p": 52}, {"c": "鍋貼類", "n": "辣韓式 10個", "p": 65}, {"c": "鍋貼類", "n": "辣韓式 15個", "p": 97.5}, {"c": "鍋貼類", "n": "甜玉米 6個", "p": 39}, {"c": "鍋貼類", "n": "甜玉米 8個", "p": 52}, {"c": "鍋貼類", "n": "甜玉米 10個", "p": 65}, {"c": "鍋貼類", "n": "甜玉米 15個", "p": 97.5}, {"c": "水餃類", "n": "翠高麗 6個", "p": 36}, {"c": "水餃類", "n": "翠高麗 8個", "p": 48}, {"c": "水餃類", "n": "翠高麗 10個", "p": 60}, {"c": "水餃類", "n": "翠高麗 15個", "p": 90}, {"c": "水餃類", "n": "香韭菜 6個", "p": 39}, {"c": "水餃類", "n": "香韭菜 8個", "p": 52}, {"c": "水餃類", "n": "香韭菜 10個", "p": 65}, {"c": "水餃類", "n": "香韭菜 15個", "p": 97.5}, {"c": "水餃類", "n": "辣韓式 6個", "p": 39}, {"c": "水餃類", "n": "辣韓式 8個", "p": 52}, {"c": "水餃類", "n": "辣韓式 10個", "p": 65}, {"c": "水餃類", "n": "辣韓式 15個", "p": 97.5}, {"c": "水餃類", "n": "甜玉米 6個", "p": 39}, {"c": "水餃類", "n": "甜玉米 8個", "p": 52}, {"c": "水餃類", "n": "甜玉米 10個", "p": 65}, {"c": "水餃類", "n": "甜玉米 15個", "p": 97.5}, {"c": "水餃類", "n": "鮮蝦 6個", "p": 54}, {"c": "水餃類", "n": "鮮蝦 8個", "p": 72}, {"c": "水餃類", "n": "鮮蝦 10個", "p": 90}, {"c": "水餃類", "n": "鮮蝦 15個", "p": 135}, {"c": "水餃類", "n": "綜合10顆 15個", "p": 75}, {"c": "水餃類", "n": "酸辣湯餃 15個", "p": 75}, {"c": "麵類", "n": "榨菜肉絲麵 15個", "p": 65}, {"c": "麵類", "n": "餛飩湯麵 15個", "p": 70}, {"c": "麵類", "n": "陽春麵 15個", "p": 40}, {"c": "麵類", "n": "乾麵 15個", "p": 35}, {"c": "麵類", "n": "麻醬麵 15個", "p": 45}, {"c": "麵類", "n": "酸辣湯麵 15個", "p": 50}, {"c": "湯類", "n": "酸辣湯 15個", "p": 30}, {"c": "湯類", "n": "原味貢丸 15個", "p": 35}, {"c": "湯類", "n": "香菇貢丸 15個", "p": 35}, {"c": "湯類", "n": "紫菜湯 15個", "p": 30}, {"c": "湯類", "n": "骨仔肉湯 15個", "p": 50}, {"c": "湯類", "n": "餛飩湯 15個", "p": 50}, {"c": "小菜類", "n": "小菜 15個", "p": 30}, {"c": "小菜類", "n": "骨仔肉 15個", "p": 50}, {"c": "小菜類", "n": "燙青菜 15個", "p": 35}, {"c": "飲品", "n": "豆漿 15個", "p": 17}, {"c": "飲品", "n": "無糖豆漿 15個", "p": 17}, {"c": "飲品", "n": "黑豆漿 15個", "p": 17}, {"c": "飲品", "n": "紅茶 15個", "p": 17}, {"c": "飲品", "n": "豆漿紅茶 15個", "p": 17}], "三兄弟烤肉飯": [{"c": null, "n": "炭烤雞排飯", "p": 135}, {"c": null, "n": "炭烤雞腿飯", "p": 135}, {"c": null, "n": "炭烤排骨飯", "p": 120}, {"c": null, "n": "酥炸去骨雞腿排飯", "p": 115}, {"c": null, "n": "炭烤雞丁飯", "p": 100}, {"c": null, "n": "照燒菲力雞排飯", "p": 100}, {"c": null, "n": "黃金豬排飯", "p": 100}, {"c": null, "n": "檸檬魚排飯(無刺)", "p": 100}, {"c": null, "n": "炭烤肉片飯", "p": 110}, {"c": null, "n": "炭烤鯖魚飯", "p": 100}, {"c": null, "n": "菜飯", "p": 90}, {"c": null, "n": "蝦捲飯", "p": 90}], "金湯丸豬腸冬粉": [{"c": null, "n": "肉包", "p": 20}, {"c": null, "n": "貢丸湯", "p": 60}, {"c": null, "n": "肝連湯", "p": 70}, {"c": null, "n": "豬腸湯", "p": 70}, {"c": null, "n": "清湯冬粉", "p": 40}, {"c": null, "n": "貢丸冬粉", "p": 70}, {"c": null, "n": "豬腸冬粉", "p": 70}, {"c": null, "n": "肝連冬粉", "p": 80}, {"c": null, "n": "豬腸冬粉+貢丸", "p": 90}, {"c": null, "n": "豬腸冬粉+貢丸+肝連", "p": 120}, {"c": null, "n": "加冬粉", "p": 10}], "嗡嗡嗡鐵路便當": [{"c": null, "n": "紅燒牛肉飯", "p": 120}, {"c": null, "n": "大雞排飯", "p": 110}, {"c": null, "n": "土魠魚便當", "p": 105}, {"c": null, "n": "三杯雞丁飯", "p": 100}, {"c": null, "n": "雞柳飯", "p": 100}, {"c": null, "n": "蜜汁雞腿飯", "p": 110}, {"c": null, "n": "大雞腿飯", "p": 110}, {"c": null, "n": "梅干焢肉飯", "p": 95}, {"c": null, "n": "黑胡椒豬柳飯", "p": 95}, {"c": null, "n": "蒲燒鯖魚飯", "p": 95}, {"c": null, "n": "蒜泥白肉飯", "p": 95}, {"c": null, "n": "炸排骨飯", "p": 95}, {"c": null, "n": "滷排骨飯", "p": 95}, {"c": null, "n": "咔啦雞飯", "p": 90}, {"c": null, "n": "白切肉飯", "p": 90}, {"c": null, "n": "鯖魚飯", "p": 90}, {"c": null, "n": "焢肉飯", "p": 85}, {"c": null, "n": "蝦捲飯", "p": 85}, {"c": null, "n": "滷棒腿飯", "p": 85}, {"c": null, "n": "雞排飯", "p": 85}, {"c": null, "n": "鱈魚飯", "p": 80}, {"c": null, "n": "香腸飯", "p": 80}, {"c": null, "n": "滷肉飯便當", "p": 80}, {"c": null, "n": "合菜便當(5附菜)", "p": 80}], "來呷便當": [{"c": "便當類", "n": "合菜飯", "p": 70}, {"c": "便當類", "n": "特餐(隨機)", "p": 80}, {"c": "便當類", "n": "每日限量雙拼", "p": 100}, {"c": "便當類", "n": "招牌飯", "p": 105}, {"c": "便當類", "n": "控肉飯", "p": 100}, {"c": "便當類", "n": "炸排骨飯", "p": 95}, {"c": "便當類", "n": "滷排骨飯", "p": 95}, {"c": "便當類", "n": "三杯雞飯", "p": 100}, {"c": "便當類", "n": "白切肉飯", "p": 95}, {"c": "便當類", "n": "無骨雞排飯", "p": 95}, {"c": "便當類", "n": "滷棒腿飯", "p": 95}, {"c": "便當類", "n": "炸大雞腿飯", "p": 105}, {"c": "便當類", "n": "虱目魚肚飯", "p": 115}, {"c": "便當類", "n": "鱈魚飯", "p": 115}, {"c": "便當類", "n": "鯖魚飯", "p": 100}, {"c": "單點", "n": "特餐主餐", "p": 50}, {"c": "單點", "n": "控肉", "p": 50}, {"c": "單點", "n": "炸排骨", "p": 55}, {"c": "單點", "n": "滷排骨", "p": 55}, {"c": "單點", "n": "三杯雞", "p": 60}, {"c": "單點", "n": "白切肉", "p": 55}, {"c": "單點", "n": "無骨雞排", "p": 55}, {"c": "單點", "n": "滷棒腿", "p": 60}, {"c": "單點", "n": "炸大雞腿", "p": 70}, {"c": "單點", "n": "虱目魚肚", "p": 70}, {"c": "單點", "n": "鱈魚", "p": 70}, {"c": "單點", "n": "鯖魚", "p": 60}, {"c": "單點", "n": "滷蛋", "p": 15}, {"c": "單點", "n": "白飯", "p": 15}, {"c": "單點", "n": "加菜", "p": 15}, {"c": "單點", "n": "飲料", "p": 15}], "胖子食堂": [{"c": "炒飯", "n": "蛋炒飯 小 —", "p": 80}, {"c": "炒飯", "n": "蛋炒飯 小 辣", "p": 80}, {"c": "炒飯", "n": "蛋炒飯 大 —", "p": 100}, {"c": "炒飯", "n": "蛋炒飯 大 辣", "p": 100}, {"c": "炒飯", "n": "肉絲炒飯 小 —", "p": 80}, {"c": "炒飯", "n": "肉絲炒飯 小 辣", "p": 80}, {"c": "炒飯", "n": "肉絲炒飯 大 —", "p": 100}, {"c": "炒飯", "n": "肉絲炒飯 大 辣", "p": 100}, {"c": "炒飯", "n": "羊肉炒飯 小 —", "p": 90}, {"c": "炒飯", "n": "羊肉炒飯 小 辣", "p": 90}, {"c": "炒飯", "n": "羊肉炒飯 大 —", "p": 110}, {"c": "炒飯", "n": "羊肉炒飯 大 辣", "p": 110}, {"c": "炒飯", "n": "牛肉炒飯 小 —", "p": 90}, {"c": "炒飯", "n": "牛肉炒飯 小 辣", "p": 90}, {"c": "炒飯", "n": "牛肉炒飯 大 —", "p": 110}, {"c": "炒飯", "n": "牛肉炒飯 大 辣", "p": 110}, {"c": "炒飯", "n": "蝦仁炒飯 小 —", "p": 90}, {"c": "炒飯", "n": "蝦仁炒飯 小 辣", "p": 90}, {"c": "炒飯", "n": "蝦仁炒飯 大 —", "p": 110}, {"c": "炒飯", "n": "蝦仁炒飯 大 辣", "p": 110}, {"c": "燴飯", "n": "肉絲燴飯 小 —", "p": 80}, {"c": "燴飯", "n": "肉絲燴飯 小 辣", "p": 80}, {"c": "燴飯", "n": "肉絲燴飯 大 —", "p": 100}, {"c": "燴飯", "n": "肉絲燴飯 大 辣", "p": 100}, {"c": "燴飯", "n": "羊肉燴飯 小 —", "p": 90}, {"c": "燴飯", "n": "羊肉燴飯 小 辣", "p": 90}, {"c": "燴飯", "n": "羊肉燴飯 大 —", "p": 110}, {"c": "燴飯", "n": "羊肉燴飯 大 辣", "p": 110}, {"c": "燴飯", "n": "什錦燴飯 小 —", "p": 90}, {"c": "燴飯", "n": "什錦燴飯 小 辣", "p": 90}, {"c": "燴飯", "n": "什錦燴飯 大 —", "p": 110}, {"c": "燴飯", "n": "什錦燴飯 大 辣", "p": 110}, {"c": "燴飯", "n": "牛肉燴飯 小 —", "p": 90}, {"c": "燴飯", "n": "牛肉燴飯 小 辣", "p": 90}, {"c": "燴飯", "n": "牛肉燴飯 大 —", "p": 110}, {"c": "燴飯", "n": "牛肉燴飯 大 辣", "p": 110}, {"c": "燴飯", "n": "蝦仁燴飯 小 —", "p": 90}, {"c": "燴飯", "n": "蝦仁燴飯 小 辣", "p": 90}, {"c": "燴飯", "n": "蝦仁燴飯 大 —", "p": 110}, {"c": "燴飯", "n": "蝦仁燴飯 大 辣", "p": 110}, {"c": "炒麵", "n": "肉絲炒麵 小 —", "p": 80}, {"c": "炒麵", "n": "肉絲炒麵 小 辣", "p": 80}, {"c": "炒麵", "n": "肉絲炒麵 大 —", "p": 100}, {"c": "炒麵", "n": "肉絲炒麵 大 辣", "p": 100}, {"c": "炒麵", "n": "羊肉炒麵 小 —", "p": 90}, {"c": "炒麵", "n": "羊肉炒麵 小 辣", "p": 90}, {"c": "炒麵", "n": "羊肉炒麵 大 —", "p": 110}, {"c": "炒麵", "n": "羊肉炒麵 大 辣", "p": 110}, {"c": "炒麵", "n": "什錦炒麵 小 —", "p": 90}, {"c": "炒麵", "n": "什錦炒麵 小 辣", "p": 90}, {"c": "炒麵", "n": "什錦炒麵 大 —", "p": 110}, {"c": "炒麵", "n": "什錦炒麵 大 辣", "p": 110}, {"c": "炒麵", "n": "牛肉炒麵 小 —", "p": 90}, {"c": "炒麵", "n": "牛肉炒麵 小 辣", "p": 90}, {"c": "炒麵", "n": "牛肉炒麵 大 —", "p": 110}, {"c": "炒麵", "n": "牛肉炒麵 大 辣", "p": 110}, {"c": "炒麵", "n": "蝦仁炒麵 小 —", "p": 90}, {"c": "炒麵", "n": "蝦仁炒麵 小 辣", "p": 90}, {"c": "炒麵", "n": "蝦仁炒麵 大 —", "p": 110}, {"c": "炒麵", "n": "蝦仁炒麵 大 辣", "p": 110}, {"c": "炒粄條", "n": "肉絲炒粄條 小 —", "p": 80}, {"c": "炒粄條", "n": "肉絲炒粄條 小 辣", "p": 80}, {"c": "炒粄條", "n": "肉絲炒粄條 大 —", "p": 100}, {"c": "炒粄條", "n": "肉絲炒粄條 大 辣", "p": 100}, {"c": "炒粄條", "n": "羊肉炒粄條 小 —", "p": 90}, {"c": "炒粄條", "n": "羊肉炒粄條 小 辣", "p": 90}, {"c": "炒粄條", "n": "羊肉炒粄條 大 —", "p": 110}, {"c": "炒粄條", "n": "羊肉炒粄條 大 辣", "p": 110}, {"c": "炒粄條", "n": "什錦炒粄條 小 —", "p": 90}, {"c": "炒粄條", "n": "什錦炒粄條 小 辣", "p": 90}, {"c": "炒粄條", "n": "什錦炒粄條 大 —", "p": 110}, {"c": "炒粄條", "n": "什錦炒粄條 大 辣", "p": 110}, {"c": "炒粄條", "n": "牛肉炒粄條 小 —", "p": 90}, {"c": "炒粄條", "n": "牛肉炒粄條 小 辣", "p": 90}, {"c": "炒粄條", "n": "牛肉炒粄條 大 —", "p": 110}, {"c": "炒粄條", "n": "牛肉炒粄條 大 辣", "p": 110}, {"c": "炒粄條", "n": "蝦仁炒粄條 小 —", "p": 90}, {"c": "炒粄條", "n": "蝦仁炒粄條 小 辣", "p": 90}, {"c": "炒粄條", "n": "蝦仁炒粄條 大 —", "p": 110}, {"c": "炒粄條", "n": "蝦仁炒粄條 大 辣", "p": 110}, {"c": "炒粄條", "n": "港式乾炒牛河 小 —", "p": 100}, {"c": "炒粄條", "n": "港式乾炒牛河 小 辣", "p": 100}, {"c": "炒粄條", "n": "港式乾炒牛河 大 —", "p": 120}, {"c": "炒粄條", "n": "港式乾炒牛河 大 辣", "p": 120}, {"c": "湯麵", "n": "貢丸湯麵 小 —", "p": 70}, {"c": "湯麵", "n": "貢丸湯麵 小 辣", "p": 70}, {"c": "湯麵", "n": "貢丸湯麵 大 —", "p": 90}, {"c": "湯麵", "n": "貢丸湯麵 大 辣", "p": 90}, {"c": "湯麵", "n": "肉絲湯麵 小 —", "p": 80}, {"c": "湯麵", "n": "肉絲湯麵 小 辣", "p": 80}, {"c": "湯麵", "n": "肉絲湯麵 大 —", "p": 100}, {"c": "湯麵", "n": "肉絲湯麵 大 辣", "p": 100}, {"c": "湯麵", "n": "蛤蠣湯麵 小 —", "p": 80}, {"c": "湯麵", "n": "蛤蠣湯麵 小 辣", "p": 80}, {"c": "湯麵", "n": "蛤蠣湯麵 大 —", "p": 100}, {"c": "湯麵", "n": "蛤蠣湯麵 大 辣", "p": 100}, {"c": "湯麵", "n": "蚵仔湯麵 小 —", "p": 80}, {"c": "湯麵", "n": "蚵仔湯麵 小 辣", "p": 80}, {"c": "湯麵", "n": "蚵仔湯麵 大 —", "p": 100}, {"c": "湯麵", "n": "蚵仔湯麵 大 辣", "p": 100}, {"c": "湯麵", "n": "什錦湯麵 小 —", "p": 90}, {"c": "湯麵", "n": "什錦湯麵 小 辣", "p": 90}, {"c": "湯麵", "n": "什錦湯麵 大 —", "p": 110}, {"c": "湯麵", "n": "什錦湯麵 大 辣", "p": 110}, {"c": "湯麵", "n": "羊肉蛤蠣湯麵 小 —", "p": 100}, {"c": "湯麵", "n": "羊肉蛤蠣湯麵 小 辣", "p": 100}, {"c": "湯麵", "n": "羊肉蛤蠣湯麵 大 —", "p": 120}, {"c": "湯麵", "n": "羊肉蛤蠣湯麵 大 辣", "p": 120}, {"c": "湯粄條", "n": "貢丸湯粄條 小 —", "p": 70}, {"c": "湯粄條", "n": "貢丸湯粄條 小 辣", "p": 70}, {"c": "湯粄條", "n": "貢丸湯粄條 大 —", "p": 90}, {"c": "湯粄條", "n": "貢丸湯粄條 大 辣", "p": 90}, {"c": "湯粄條", "n": "肉絲湯粄條 小 —", "p": 80}, {"c": "湯粄條", "n": "肉絲湯粄條 小 辣", "p": 80}, {"c": "湯粄條", "n": "肉絲湯粄條 大 —", "p": 100}, {"c": "湯粄條", "n": "肉絲湯粄條 大 辣", "p": 100}, {"c": "湯粄條", "n": "蛤蠣湯粄條 小 —", "p": 80}, {"c": "湯粄條", "n": "蛤蠣湯粄條 小 辣", "p": 80}, {"c": "湯粄條", "n": "蛤蠣湯粄條 大 —", "p": 100}, {"c": "湯粄條", "n": "蛤蠣湯粄條 大 辣", "p": 100}, {"c": "湯粄條", "n": "蚵仔湯粄條 小 —", "p": 80}, {"c": "湯粄條", "n": "蚵仔湯粄條 小 辣", "p": 80}, {"c": "湯粄條", "n": "蚵仔湯粄條 大 —", "p": 100}, {"c": "湯粄條", "n": "蚵仔湯粄條 大 辣", "p": 100}, {"c": "湯粄條", "n": "什錦湯粄條 小 —", "p": 90}, {"c": "湯粄條", "n": "什錦湯粄條 小 辣", "p": 90}, {"c": "湯粄條", "n": "什錦湯粄條 大 —", "p": 110}, {"c": "湯粄條", "n": "什錦湯粄條 大 辣", "p": 110}, {"c": "湯粄條", "n": "羊肉蛤蠣湯粄條 小 —", "p": 100}, {"c": "湯粄條", "n": "羊肉蛤蠣湯粄條 小 辣", "p": 100}, {"c": "湯粄條", "n": "羊肉蛤蠣湯粄條 大 —", "p": 120}, {"c": "湯粄條", "n": "羊肉蛤蠣湯粄條 大 辣", "p": 120}, {"c": "湯品", "n": "貢丸湯 大 辣", "p": 30}, {"c": "湯品", "n": "蛋花湯 大 辣", "p": 30}, {"c": "湯品", "n": "貢丸蛋花湯 大 辣", "p": 50}, {"c": "湯品", "n": "蛤蠣湯 大 辣", "p": 50}, {"c": "湯品", "n": "蚵仔湯 大 辣", "p": 50}, {"c": "湯品", "n": "羊肉蛤蠣湯 大 辣", "p": 80}, {"c": "湯品", "n": "什錦湯 大 辣", "p": 90}, {"c": "蓋飯", "n": "牛肉蓋飯 — 辣", "p": 150}, {"c": "蓋飯", "n": "牛肉蓋飯 辣", "p": 150}, {"c": "蓋飯", "n": "羊肉蓋飯 — 辣", "p": 150}, {"c": "蓋飯", "n": "羊肉蓋飯 辣", "p": 150}], "Q將精緻燒臘快餐": [{"c": "便當類", "n": "至尊五寶飯", "p": 160}, {"c": "便當類", "n": "無敵四寶飯", "p": 140}, {"c": "便當類", "n": "限量鴨腿飯", "p": 140}, {"c": "便當類", "n": "明爐燒鴨飯", "p": 120}, {"c": "便當類", "n": "蜜汁烤雞腿飯", "p": 120}, {"c": "便當類", "n": "玫瑰油雞腿飯", "p": 120}, {"c": "便當類", "n": "燒臘雙拼飯", "p": 110}, {"c": "便當類", "n": "蜜汁叉燒飯", "p": 110}, {"c": "便當類", "n": "招牌三寶飯", "p": 110}, {"c": "便當類", "n": "化皮燒肉飯", "p": 110}, {"c": "便當類", "n": "排骨飯", "p": 100}, {"c": "便當類", "n": "日式豬排飯", "p": 100}, {"c": "便當類", "n": "卡啦雞腿飯", "p": 100}, {"c": "便當類", "n": "台南蝦捲飯", "p": 100}, {"c": "便當類", "n": "蒲燒鯛魚飯", "p": 100}, {"c": "每日限量", "n": "沙茶牛肉飯", "p": 110}, {"c": "每日限量", "n": "糖醋排骨飯", "p": 110}, {"c": "每日限量", "n": "滑蛋蝦仁飯", "p": 110}, {"c": "每日限量", "n": "蔥爆豬柳飯", "p": 110}, {"c": "每日限量", "n": "泰式打拋豬飯", "p": 110}, {"c": "每日限量", "n": "塔香三杯雞飯", "p": 110}, {"c": "單點", "n": "燒鴨腿", "p": 90}, {"c": "單點", "n": "蜜汁烤雞腿", "p": 75}, {"c": "單點", "n": "玫瑰油雞腿", "p": 75}, {"c": "單點", "n": "蜜汁叉燒", "p": 65}, {"c": "單點", "n": "明爐燒鴨", "p": 65}, {"c": "單點", "n": "化皮燒肉", "p": 65}, {"c": "單點", "n": "蒲燒鯛魚", "p": 55}, {"c": "單點", "n": "日式豬排", "p": 55}, {"c": "單點", "n": "排骨", "p": 55}, {"c": "單點", "n": "台南蝦捲", "p": 55}, {"c": "單點", "n": "卡啦雞腿", "p": 55}, {"c": "單點", "n": "白飯", "p": 15}], "玉莊南越美食": [{"c": "湯麵類", "n": "雞肉冬粉", "p": 110}, {"c": "湯麵類", "n": "雞肉河粉", "p": 110}, {"c": "湯麵類", "n": "雞肉米線", "p": 110}, {"c": "湯麵類", "n": "清燉牛肉米線", "p": 120}, {"c": "湯麵類", "n": "米苔目(雞肉)", "p": 100}, {"c": "湯麵類", "n": "米苔目(豬肉)", "p": 100}, {"c": "湯麵類", "n": "什錦麵", "p": 120}, {"c": "湯麵類", "n": "什錦河粉", "p": 120}, {"c": "湯麵類", "n": "紅燒牛肉麵", "p": 120}, {"c": "湯麵類", "n": "紅燒牛肉米線", "p": 120}, {"c": "湯麵類", "n": "牛肉河粉", "p": 120}, {"c": "湯麵類", "n": "牛肉米線", "p": 120}, {"c": "湯麵類", "n": "豬肉河粉", "p": 110}, {"c": "湯麵類", "n": "豬肉米線", "p": 110}, {"c": "湯麵類", "n": "海鮮河粉", "p": 120}, {"c": "湯麵類", "n": "海鮮米線", "p": 120}, {"c": "湯麵類", "n": "豬腳米線", "p": 110}, {"c": "湯麵類", "n": "炸春捲米線", "p": 120}, {"c": "湯麵類", "n": "雞腿米線", "p": 110}, {"c": "湯麵類", "n": "雞腿河粉", "p": 110}, {"c": "炒類", "n": "蛋炒飯", "p": 80}, {"c": "炒類", "n": "豬肉炒河粉", "p": 120}, {"c": "炒類", "n": "牛肉炒飯", "p": 120}, {"c": "炒類", "n": "豬肉炒飯", "p": 110}, {"c": "炒類", "n": "牛肉炒河粉", "p": 120}, {"c": "炒類", "n": "海鮮炒河粉", "p": 120}, {"c": "炒類", "n": "炒牛肉", "p": 120}, {"c": "炒類", "n": "炒什錦麵", "p": 100}, {"c": "炒類", "n": "涼春捲", "p": 100}, {"c": "炒類", "n": "炸春捲", "p": 100}, {"c": "飯類", "n": "雞肉飯", "p": 100}, {"c": "飯類", "n": "烤排骨飯", "p": 120}, {"c": "飯類", "n": "紅燒牛肉燴飯", "p": 120}, {"c": "麵包類", "n": "法國麵包(牛肉)", "p": 110}, {"c": "麵包類", "n": "法國麵包(豬肉)", "p": 100}, {"c": "鍋類", "n": "越式酸辣魚湯", "p": 130}, {"c": "鍋類", "n": "酸辣海鮮+牛肉米線", "p": 130}, {"c": "鍋類", "n": "酸辣海鮮+豬肉米線", "p": 130}, {"c": "鍋類", "n": "酸辣牛肉米線", "p": 130}, {"c": "鍋類", "n": "酸辣豬肉米線", "p": 130}, {"c": "湯類", "n": "豬心湯", "p": 70}, {"c": "湯類", "n": "牛肉湯", "p": 100}, {"c": "湯類", "n": "海鮮湯", "p": 100}, {"c": "湯類", "n": "蛋花湯", "p": 30}, {"c": "湯類", "n": "白飯", "p": 10}, {"c": "湯類", "n": "涼拌青木瓜絲", "p": 100}]}}
+</script>
+<script>
+(function(){
+  "use strict";
+
+  // ================== 管理密碼（可自行修改這一行）==================
+  var ADMIN_PASSWORD = "98770235";
+  // ===============================================================
+
+  var DATA = JSON.parse(document.getElementById('app-data').textContent);
+  var CAL = DATA.calendar, STORES = DATA.stores, MENUS = DATA.menus;
+  var DOW = ['日','一','二','三','四','五','六'];
+
+  // ================== 備用店家（3 個彈性格子）==================
+  var BACKUP_KEYS = ['backup1','backup2','backup3'];
+  var BACKUP_LABELS = { backup1:'備用一', backup2:'備用二', backup3:'備用三' };
+  var backupStores = {}; // backupStores[key] = 店家名稱字串，來自雲端 backupStores/
+  function isBackupKey(k){ return BACKUP_KEYS.indexOf(k)!==-1; }
+  BACKUP_KEYS.forEach(function(k){ CAL[k]=''; });
+
+  // ================== 每日截止收單時間（可自行修改）==================
+  var CUTOFF_HOUR = 9, CUTOFF_MIN = 30;
+  function isDateLocked(iso){
+    if(isBackupKey(iso)) return false; // 備用格子不受每日截止時間限制
+    if(state.admin) return false; // 管理模式可略過截止時間（例如代訂補單）
+    var today=todayISO();
+    if(iso<today) return true;
+    if(iso===today){ var now=new Date(); var cutoff=new Date(); cutoff.setHours(CUTOFF_HOUR,CUTOFF_MIN,0,0); return now>=cutoff; }
+    return false;
+  }
+
+  var FIREBASE_CONFIG = {
+    apiKey:            "AIzaSyD93d9ymEdJlTRYdHtBPGJEjDTfYEsIU5g",
+    authDomain:        "bento-order-1efce.firebaseapp.com",
+    databaseURL:       "https://bento-order-1efce-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId:         "bento-order-1efce",
+    storageBucket:     "bento-order-1efce.firebasestorage.app",
+    messagingSenderId: "760767750931",
+    appId:             "1:760767750931:web:1c13d08c285f36a9b7f0e6"
+  };
+  var db = null;   /* 延後初始化：Firebase CDN 若載入失敗，也不會讓整支程式在這裡就掛掉 */
+
+  var orders = {};   // orders[date][person] = [{name,price,qty}]
+  var notes  = {};   // notes[date][person]  = "特殊要求"
+  var paid   = {};   // paid[date][person]=true ; paid[date][person+'_note']=string
+  var state  = { selectedDate:null, cart:{}, tab:'order', sumDate:null, payDate:null, admin:false, proxyName:null, greeted:false };
+
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function safeDateKey(d){ return d.replace(/-/g,'_'); }
+  function safePersonKey(p){ return p.replace(/[.#$\[\]\/]/g,'_'); }
+  function currentName(){ return state.proxyName || (($('orderer-name').value)||'').trim(); }
+  function todayISO(){ var d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function fmtDateLabel(iso){ var p=iso.split('-'); var d=new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2])); return { day:parseInt(p[2],10), dow:DOW[d.getDay()] }; }
+  function dateChipLabel(d){ if(isBackupKey(d)) return BACKUP_LABELS[d]; var p=d.split('-'); return parseInt(p[1],10)+'/'+parseInt(p[2],10); }
+  function dateDisplayTag(d){ return isBackupKey(d) ? BACKUP_LABELS[d] : d; }
+  function orderArr(date,pkey){ var o=orders[date]&&orders[date][pkey]; return Array.isArray(o)?o:[]; }
+  function personTotal(items){ return items.reduce(function(s,i){ return s+i.price*i.qty; },0); }
+  function datesWithOrders(){ return Object.keys(orders).filter(function(d){ var o=orders[d]||{}; return Object.keys(o).some(function(k){ return Array.isArray(o[k])&&o[k].length>0; }); }).sort(); }
+
+  var toastTimer=null;
+  function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove('show'); },2400); }
+  function showLoading(on){ var el=$('loading-bar'); if(el) el.style.opacity=on?'1':'0'; }
+  function showCloudError(msg){ var b=$('cloud-error'); if(!b){ b=document.createElement('div'); b.id='cloud-error'; b.style.cssText='position:sticky;top:0;z-index:60;background:#c0392b;color:#fff;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;line-height:1.5;'; if(document.body) document.body.insertBefore(b, document.body.firstChild); } b.textContent=msg; }
+  function cloudReady(){ if(!db){ toast('\u26a0\ufe0f \u96f2\u7aef\u5c1a\u672a\u9023\u7dda\uff0c\u66ab\u6642\u7121\u6cd5\u5132\u5b58\uff0c\u8acb\u7a0d\u5f8c\u518d\u8a66\u6216\u91cd\u65b0\u6574\u7406\u9801\u9762'); return false; } return true; }
+
+  // ---------------- Firebase ----------------
+  function initFirebase(){
+    if(typeof firebase==='undefined' || !firebase || !firebase.initializeApp){
+      showLoading(false);
+      showCloudError('\u26a0\ufe0f \u7121\u6cd5\u8f09\u5165\u96f2\u7aef\u5143\u4ef6\uff08\u8acb\u78ba\u8a8d\u7db2\u8def\uff0c\u6216\u7a0d\u5f8c\u91cd\u65b0\u6574\u7406\u9801\u9762\uff09\u3002\u76ee\u524d\u53ef\u700f\u89bd\u83dc\u55ae\uff0c\u4f46\u9001\u51fa\u8a02\u55ae\u6703\u5931\u6557\u3002');
+      return;
+    }
+    try{
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.database();
+    }catch(e){
+      showLoading(false);
+      showCloudError('\u26a0\ufe0f \u96f2\u7aef\u9023\u7dda\u5931\u6557\uff1a'+(e&&e.message?e.message:e)+'\u3002\u8acb\u91cd\u65b0\u6574\u7406\u9801\u9762\u3002');
+      return;
+    }
+    showLoading(true);
+    db.ref('orders').on('value', function(snap){
+      var raw=snap.val()||{}; orders={};
+      Object.keys(raw).forEach(function(sd){ var date=sd.replace(/_/g,'-'); orders[date]={}; var ps=raw[sd]||{};
+        Object.keys(ps).forEach(function(sp){ var it=ps[sp]; orders[date][sp]=Array.isArray(it)?it:(it&&typeof it==='object'?Object.values(it):[]); }); });
+      refreshCalendarBadges();
+      if(state.tab==='summary') renderSummary();
+      if(state.tab==='payment') renderPayment();
+      maybeAutofill();
+    });
+    db.ref('orderNotes').on('value', function(snap){
+      var raw=snap.val()||{}; notes={};
+      Object.keys(raw).forEach(function(sd){ var date=sd.replace(/_/g,'-'); notes[date]={}; var ps=raw[sd]||{};
+        Object.keys(ps).forEach(function(sp){ notes[date][sp]=ps[sp]; }); });
+      if(state.tab==='summary') renderSummary();
+    });
+    db.ref('paid').on('value', function(snap){ paid=snap.val()||{}; if(state.tab==='payment') renderPayment(); });
+    db.ref('backupStores').on('value', function(snap){
+      backupStores=snap.val()||{};
+      BACKUP_KEYS.forEach(function(k){ CAL[k]=backupStores[k]||''; });
+      renderBackupChips();
+      if(state.tab==='order' && isBackupKey(state.selectedDate)){ renderContent(); renderCart(); }
+      if(state.tab==='summary') renderSummary();
+      if(state.tab==='payment') renderPayment();
+    });
+    db.ref('.info/connected').on('value', function(snap){ var c=snap.val(); showLoading(!c); if(c&&!state.greeted){ state.greeted=true; toast('\u2705 \u5df2\u9023\u7dda\u96f2\u7aef'); } });
+  }
+
+  // ---------------- cart <-> cloud ----------------
+  function cartKeyPrefix(){ return state.selectedDate+'|'+CAL[state.selectedDate]+'|'; }
+  function hasLocalCartForDate(date){ var pre=date+'|'+CAL[date]+'|'; return Object.keys(state.cart).some(function(k){ return k.indexOf(pre)===0; }); }
+  function clearCartForDate(date){ var pre=date+'|'+CAL[date]+'|'; Object.keys(state.cart).forEach(function(k){ if(k.indexOf(pre)===0) delete state.cart[k]; }); }
+
+  function loadMyOrder(){
+    var date=state.selectedDate, name=currentName();
+    clearCartForDate(date);
+    var noteEl=$('order-note'); if(noteEl) noteEl.value='';
+    if(!name||!date||!CAL[date]) return;
+    var key=safePersonKey(name);
+    var stored=orderArr(date,key); var menu=MENUS[CAL[date]]||[]; var used={};
+    stored.forEach(function(si){ for(var idx=0; idx<menu.length; idx++){ if(used[idx]) continue;
+      if(menu[idx].n===si.name && menu[idx].p===si.price){ used[idx]=true;
+        state.cart[date+'|'+CAL[date]+'|'+idx]={date:date,store:CAL[date],name:si.name,category:menu[idx].c,price:si.price,qty:si.qty}; return; } } });
+    if(noteEl && notes[date] && notes[date][key]) noteEl.value=notes[date][key];
+  }
+  function maybeAutofill(){
+    if(state.tab!=='order') return;
+    var date=state.selectedDate, name=currentName();
+    if(!date||!name||!CAL[date]) return;
+    if(hasLocalCartForDate(date)) return;
+    if(!orderArr(date,safePersonKey(name)).length) return;
+    loadMyOrder(); renderContent(); renderCart();
+  }
+
+  // ---------------- calendar ----------------
+  function buildCalendar(){
+    var el=$('calendar'); var dates=Object.keys(CAL).filter(function(d){ return !isBackupKey(d); }).sort(); var today=todayISO();
+    var initial=dates.indexOf(today)!==-1?today:dates[0];
+    dates.forEach(function(iso){ var info=fmtDateLabel(iso); var chip=document.createElement('div');
+      chip.className='day-chip'+(iso===today?' today':''); chip.dataset.date=iso;
+      chip.innerHTML='<div class="dow">\u9031'+info.dow+'</div><div class="dnum">'+info.day+'</div><div class="store">'+esc(CAL[iso])+'</div>';
+      chip.addEventListener('click', function(){
+        if(isDateLocked(iso)){ toast('\u26d4 \u5df2\u904e\u622a\u6b62\u6642\u9593\uff08'+CUTOFF_HOUR+':'+('0'+CUTOFF_MIN).slice(-2)+'\uff09\uff0c\u7121\u6cd5\u9ede\u9910'); return; }
+        selectDate(iso);
+      });
+      el.appendChild(chip);
+    });
+    renderBackupChips();
+    refreshLockStates();
+    selectDate(initial);
+  }
+  function refreshCalendarBadges(){ document.querySelectorAll('.day-chip').forEach(function(chip){ var d=chip.dataset.date; var o=orders[d]||{};
+    var has=Object.keys(o).some(function(k){ return Array.isArray(o[k])&&o[k].length>0; }); chip.classList.toggle('has-orders', !!has); }); }
+  function refreshLockStates(){
+    document.querySelectorAll('.day-chip[data-date]').forEach(function(chip){
+      var d=chip.dataset.date; if(isBackupKey(d)) return;
+      var locked=isDateLocked(d);
+      chip.classList.toggle('locked', locked);
+      var tag=chip.querySelector('.lock-tag');
+      if(locked && !tag){ var t=document.createElement('span'); t.className='lock-tag'; t.textContent='\u5df2\u622a\u6b62'; chip.appendChild(t); }
+      else if(!locked && tag){ tag.remove(); }
+    });
+  }
+  function renderBackupChips(){
+    var el=$('calendar'); if(!el) return;
+    var existing=el.querySelectorAll('.backup-chip'); existing.forEach(function(c){ c.remove(); });
+    BACKUP_KEYS.forEach(function(key){
+      var storeName=backupStores[key]||'';
+      var chip=document.createElement('div');
+      chip.className='day-chip backup-chip'+(state.selectedDate===key?' selected':'');
+      chip.dataset.date=key;
+      var selectHtml='';
+      if(state.admin){
+        var opts='<option value="">\u2500 \u672a\u8a2d\u5b9a \u2500</option>'+Object.keys(STORES).sort().map(function(s){
+          return '<option value="'+esc(s)+'"'+(s===storeName?' selected':'')+'>'+esc(s)+'</option>'; }).join('');
+        selectHtml='<select class="backup-select" data-key="'+key+'">'+opts+'</select>';
+      }
+      chip.innerHTML='<div class="dow">\u5099\u7528\u5e97\u5bb6</div><div class="dnum" style="font-size:15px;letter-spacing:.03em">'+BACKUP_LABELS[key]+'</div>'+
+        '<div class="store">'+(storeName?esc(storeName):'<span style="opacity:.55">\u5c1a\u672a\u8a2d\u5b9a</span>')+'</div>'+selectHtml;
+      chip.addEventListener('click', function(e){
+        if(e.target.closest('.backup-select')) return;
+        if(!storeName){ toast('\u7ba1\u7406\u8005\u5c1a\u672a\u8a2d\u5b9a\u300c'+BACKUP_LABELS[key]+'\u300d\u7684\u5e97\u5bb6'); return; }
+        selectDate(key);
+      });
+      el.appendChild(chip);
+    });
+  }
+  function saveBackupStore(key,storeName){
+    if(!cloudReady()) return;
+    backupStores[key]=storeName||null;
+    db.ref('backupStores/'+key).set(storeName||null)
+      .then(function(){ toast('\u5df2\u66f4\u65b0\u300c'+BACKUP_LABELS[key]+'\u300d\u7684\u5e97\u5bb6'); })
+      .catch(function(e){ toast('\u5132\u5b58\u5931\u6557\uff1a'+e.message); });
+  }
+  function selectDate(iso){ state.selectedDate=iso;
+    document.querySelectorAll('.day-chip').forEach(function(c){ c.classList.toggle('selected', c.dataset.date===iso); });
+    loadMyOrder(); renderContent(); renderCart(); }
+
+  // ---------------- ordering view ----------------
+  function getQty(idx){ var k=cartKeyPrefix()+idx; return state.cart[k]?state.cart[k].qty:0; }
+  function setQty(idx,item,qty){ var k=cartKeyPrefix()+idx; if(qty<=0){ delete state.cart[k]; }
+    else { state.cart[k]={date:state.selectedDate,store:CAL[state.selectedDate],name:item.n,category:item.c,price:item.p,qty:qty}; } }
+  function renderContent(){
+    var el=$('content'); el.innerHTML=''; var iso=state.selectedDate; var storeName=CAL[iso];
+    if(isDateLocked(iso)){ el.innerHTML='<div class="empty-note">\u26d4 \u9019\u5929\u5df2\u904e\u622a\u6b62\u6642\u9593\uff08\u6bcf\u65e5 '+CUTOFF_HOUR+':'+('0'+CUTOFF_MIN).slice(-2)+'\uff09\uff0c\u7121\u6cd5\u9ede\u9910\u3002</div>'; return; }
+    if(!storeName){
+      el.innerHTML='<div class="empty-note">'+(isBackupKey(iso)?'\u7ba1\u7406\u8005\u5c1a\u672a\u8a2d\u5b9a\u6b64\u5099\u7528\u5e97\u5bb6\uff0c\u8acb\u6d3d\u7ba1\u7406\u4eba\u54e1\u3002':'\u9019\u5929\u6c92\u6709\u8a02\u8cfc\u5594\uff0c\u8acb\u9078\u64c7\u5176\u4ed6\u65e5\u671f\u3002')+'</div>';
+      return;
+    }
+    var store=STORES[storeName]||{}; var items=MENUS[storeName]||[];
+    var tagText = isBackupKey(iso) ? esc(BACKUP_LABELS[iso]) : (iso+'\uff08\u9031'+fmtDateLabel(iso).dow+'\uff09');
+    var card=document.createElement('div'); card.className='store-card'; var m='';
+    if(store.phone)     m+='<div><span class="k">\u96fb\u8a71</span>'+esc(store.phone)+'</div>';
+    if(store.mobile)    m+='<div><span class="k">\u624b\u6a5f</span>'+esc(store.mobile)+'</div>';
+    if(store.address)   m+='<div><span class="k">\u5730\u5740</span>'+esc(store.address)+'</div>';
+    if(store.closed)    m+='<div><span class="k">\u516c\u4f11</span>'+esc(store.closed)+'</div>';
+    if(store.min_order) m+='<div><span class="k">\u6700\u4f4e\u5916\u9001</span>'+esc(store.min_order)+'</div>';
+    card.innerHTML='<h2>'+esc(storeName)+'<span class="tag">'+tagText+'</span></h2><div class="store-meta">'+m+'</div>'+(store.note?'<div class="store-note">\uff0a '+esc(store.note)+'</div>':'');
+    el.appendChild(card);
+    var groups=[]; var gm={}; var FLAT='__flat__';
+    items.forEach(function(item,idx){ var key=item.c===null?FLAT:item.c; if(!gm[key]){ gm[key]={name:item.c,items:[]}; groups.push(gm[key]); } gm[key].items.push({item:item,idx:idx}); });
+    groups.forEach(function(group){ var section=document.createElement('div'); section.className='menu-section';
+      if(group.name!==null){ var h3=document.createElement('h3'); h3.textContent=group.name; section.appendChild(h3); }
+      var grid=document.createElement('div'); grid.className='menu-grid'; if(group.name===null) grid.style.marginTop='4px';
+      group.items.forEach(function(pair){ var item=pair.item, idx=pair.idx; var qty=getQty(idx);
+        var row=document.createElement('div'); row.className='item-row'+(qty>0?' active':'');
+        row.innerHTML='<div class="item-info"><div class="item-name">'+esc(item.n)+'</div><div class="item-price">$'+item.p+'</div></div>'+
+          '<div class="stepper"><button data-act="minus" data-idx="'+idx+'">\uff0d</button><div class="qty" data-qty="'+idx+'">'+qty+'</div><button data-act="plus" data-idx="'+idx+'">\uff0b</button></div>';
+        grid.appendChild(row); });
+      section.appendChild(grid); el.appendChild(section); });
+  }
+  function onStepperClick(e){ var btn=e.target.closest('button[data-act]'); if(!btn) return;
+    var idx=parseInt(btn.dataset.idx,10); var items=MENUS[CAL[state.selectedDate]]||[]; var item=items[idx];
+    var cur=getQty(idx); var next=btn.dataset.act==='plus'?cur+1:Math.max(0,cur-1); setQty(idx,item,next);
+    var qtyEl=document.querySelector('.qty[data-qty="'+idx+'"]'); if(qtyEl) qtyEl.textContent=next;
+    var row=btn.closest('.item-row'); if(row) row.classList.toggle('active', next>0); renderCart(); }
+  function allCartEntries(){ return Object.keys(state.cart).map(function(k){ return state.cart[k]; }); }
+  function renderCart(){
+    var entries=allCartEntries().filter(function(e){ return e.date===state.selectedDate; }); var bar=$('cart-bar');
+    if(state.tab!=='order' || entries.length===0){ bar.style.display='none'; $('cart-detail').classList.remove('open'); return; }
+    bar.style.display='block'; var tq=0,tp=0; var listEl=$('cart-list'); listEl.innerHTML='';
+    entries.forEach(function(e){ tq+=e.qty; tp+=e.qty*e.price; var li=document.createElement('li');
+      li.innerHTML='<span class="n">'+esc(e.name)+' \u00d7 '+e.qty+'</span><span class="p">$'+(e.qty*e.price)+'</span>'; listEl.appendChild(li); });
+    $('cart-count').textContent='\u5df2\u9078 '+entries.length+' \u9805\u30fb\u5171 '+tq+' \u4efd'; $('cart-total').textContent=tp;
+  }
+
+  function submitOrder(){
+    var name=currentName();
+    if(!name){ toast('\u8acb\u5148\u586b\u5beb\u59d3\u540d'); $('orderer-name').focus(); return; }
+    var date=state.selectedDate; if(!date||!CAL[date]){ toast('\u8acb\u5148\u9078\u64c7\u65e5\u671f'); return; }
+    var arr=allCartEntries().filter(function(e){ return e.date===date; }).map(function(e){ return {name:e.name,price:e.price,qty:e.qty}; });
+    var note=(($('order-note').value)||'').trim();
+    var sd=safeDateKey(date), sp=safePersonKey(name);
+    if(!cloudReady()) return;
+    db.ref('orderNotes/'+sd+'/'+sp).set((arr.length&&note)?note:null);
+    db.ref('orders/'+sd+'/'+sp).set(arr.length?arr:null)
+      .then(function(){ toast(arr.length?('\u2705 \u5df2\u9001\u51fa\uff01'+name+' \u7684\u8a02\u55ae\u5df2\u5b58\u5165\u96f2\u7aef'):'\u5df2\u6e05\u9664 '+name+' \u7684\u8a02\u55ae'); })
+      .catch(function(e){ toast('\u9001\u51fa\u5931\u6557\uff1a'+e.message); });
+  }
+  function clearMine(){
+    var date=state.selectedDate; var name=currentName();
+    clearCartForDate(date); var ne=$('order-note'); if(ne) ne.value=''; renderContent(); renderCart();
+    if(name&&date){ var sd=safeDateKey(date), sp=safePersonKey(name);
+      db.ref('orders/'+sd+'/'+sp).set(null).catch(function(){}); db.ref('orderNotes/'+sd+'/'+sp).set(null).catch(function(){}); }
+    toast('\u5df2\u6e05\u7a7a\u672c\u65e5\u9078\u8cfc');
+  }
+
+  // ---------------- admin ----------------
+  function setAdmin(on){
+    state.admin=on;
+    try{ if(on) sessionStorage.setItem('bento_admin','1'); else sessionStorage.removeItem('bento_admin'); }catch(e){}
+    var lb=$('lock-btn'); lb.textContent=on?'\ud83d\udd13':'\ud83d\udd12'; lb.classList.toggle('on',on);
+    $('admin-bar').style.display=on?'flex':'none';
+    if(!on) endProxy();
+    renderBackupChips();
+    refreshLockStates();
+    if(state.tab==='summary') renderSummary();
+    if(state.tab==='payment') renderPayment();
+  }
+  var pendingUnlock=null;
+  function askPassword(after,titleText){ pendingUnlock=after||null; $('pw-input').value=''; $('pw-err').textContent='';
+    var t=$('pw-title'); if(t) t.textContent=titleText?('\ud83d\udd12 '+titleText):'\ud83d\udd12 \u7ba1\u7406\u5bc6\u78bc';
+    $('pw-overlay').classList.add('show'); setTimeout(function(){ $('pw-input').focus(); },50); }
+  function closePassword(){ $('pw-overlay').classList.remove('show'); }
+  function tryUnlock(){ if($('pw-input').value===ADMIN_PASSWORD){ setAdmin(true); closePassword(); var f=pendingUnlock; pendingUnlock=null; if(f) f(); else toast('\u2705 \u5df2\u89e3\u9396\u7ba1\u7406\u6a21\u5f0f'); } else { $('pw-err').textContent='\u5bc6\u78bc\u932f\u8aa4'; } }
+
+  // proxy ordering (代人訂購)
+  function startProxy(){
+    var nm=window.prompt('\u4ee3\u8ab0\u8a02\u8cfc\uff1f\u8acb\u8f38\u5165\u5c0d\u65b9\u59d3\u540d\uff1a'); if(nm==null) return; nm=nm.trim(); if(!nm){ toast('\u59d3\u540d\u4e0d\u53ef\u7a7a\u767d'); return; }
+    state.proxyName=nm; $('orderer-name').disabled=true;
+    var b=$('proxy-banner'); b.style.display='block';
+    b.innerHTML='\ud83e\uddd1\u200d\ud83d\udcbc \u6b63\u5728\u4ee3\u300c'+esc(nm)+'\u300d\u8a02\u8cfc\uff0c\u9078\u597d\u5f8c\u6309\u9001\u51fa\uff1b\u5b8c\u6210\u8acb\u6309 <button class="btn-mini" id="proxy-end">\u7d50\u675f\u4ee3\u8a02</button>';
+    $('proxy-end').addEventListener('click', endProxy);
+    loadMyOrder(); renderContent(); renderCart(); toast('\u4ee3\u8a02\uff1a'+nm);
+  }
+  function endProxy(){
+    if(!state.proxyName){ $('proxy-banner').style.display='none'; return; }
+    state.proxyName=null; $('orderer-name').disabled=false; $('proxy-banner').style.display='none';
+    loadMyOrder(); renderContent(); renderCart();
+  }
+  function deletePersonOrder(date,person){
+    if(!window.confirm('\u78ba\u5b9a\u522a\u9664\u300c'+person+'\u300d\u5728 '+date+' \u7684\u8a02\u55ae\uff1f')) return;
+    var sd=safeDateKey(date), sp=safePersonKey(person);
+    if(!cloudReady()) return;
+    db.ref('orders/'+sd+'/'+sp).set(null); db.ref('orderNotes/'+sd+'/'+sp).set(null);
+    if(paid[date]){ delete paid[date][person]; delete paid[date][person+'_note']; db.ref('paid').set(paid); }
+    toast('\u5df2\u522a\u9664 '+person+' \u7684\u8a02\u55ae');
+  }
+  function requestClearDay(date){
+    askPassword(function(){ clearDay(date); }, '\u6e05\u7a7a\u300c'+dateDisplayTag(date)+'\u300d\u5168\u90e8\u8a02\u55ae\uff0c\u8acb\u8f38\u5165\u5bc6\u78bc\u78ba\u8a8d');
+  }
+  function clearDay(date){
+    var sd=safeDateKey(date);
+    if(!cloudReady()) return;
+    db.ref('orders/'+sd).set(null); db.ref('orderNotes/'+sd).set(null);
+    if(paid[date]){ delete paid[date]; db.ref('paid').set(paid); }
+    toast('\u5df2\u6e05\u7a7a '+dateDisplayTag(date)+' \u5168\u90e8\u8a02\u55ae');
+  }
+
+  // ---------------- stats ----------------
+  function calcItemStats(allOrders){ var stats={}; Object.keys(allOrders).forEach(function(p){ var items=allOrders[p]; if(!Array.isArray(items)) return;
+    items.forEach(function(i){ if(!stats[i.name]) stats[i.name]={qty:0,price:i.price}; stats[i.name].qty+=i.qty; }); }); return stats; }
+
+  // ---------------- summary ----------------
+  function renderSummary(){
+    var el=$('view-summary'); var dates=datesWithOrders();
+    if(!dates.length){ el.innerHTML='<div class="empty-note">\u76ee\u524d\u9084\u6c92\u6709\u4efb\u4f55\u8a02\u55ae\u3002<br>\u5230\u300c\u8a02\u8cfc\u300d\u9801\u9001\u51fa\u8a02\u55ae\u5f8c\uff0c\u9019\u88e1\u6703\u51fa\u73fe\u7d71\u8a08\u3002</div>'; return; }
+    if(!state.sumDate || dates.indexOf(state.sumDate)===-1){ var t=todayISO(); state.sumDate=dates.indexOf(t)!==-1?t:dates[dates.length-1]; }
+    var date=state.sumDate;
+    var chips=dates.map(function(d){ return '<button class="date-chip'+(d===date?' selected':'')+'" data-date="'+d+'">'+esc(dateChipLabel(d))+'</button>'; }).join('');
+    var allOrders=orders[date]||{}; var stats=calcItemStats(allOrders);
+    var people=Object.keys(allOrders).filter(function(p){ return Array.isArray(allOrders[p])&&allOrders[p].length>0; });
+    var total=0;
+    var statRows=Object.keys(stats).map(function(name){ var s=stats[name]; var amt=s.price*s.qty; total+=amt;
+      return '<div class="srow"><div><div class="nm">'+esc(name)+'</div></div><div style="display:flex;align-items:center;gap:14px"><span class="qty-badge">\u00d7'+s.qty+'</span><span class="amt">$'+amt+'</span></div></div>'; }).join('');
+    var personRows=people.map(function(p){ var items=allOrders[p]; var amt=personTotal(items);
+      var pnote=(notes[date]&&notes[date][p])?notes[date][p]:'';
+      var sub=items.map(function(i){ return i.name+(i.qty>1?' \u00d7'+i.qty:''); }).join('\u3001')+(pnote?'\u3000\ud83d\udcdd '+esc(pnote):'');
+      var delBtn=state.admin?'<button class="del-person" data-date="'+date+'" data-person="'+esc(p)+'" title="\u522a\u9664">\ud83d\uddd1</button>':'';
+      return '<div class="srow"><div><div class="nm">'+esc(p)+'</div><div class="sub">'+sub+'</div></div><div style="display:flex;align-items:center"><span class="amt">$'+amt+'</span>'+delBtn+'</div></div>'; }).join('');
+    var noteRows=people.filter(function(p){ return notes[date]&&notes[date][p]; }).map(function(p){
+      return '<div class="srow"><div><div class="nm">'+esc(p)+'</div><div class="sub">'+esc(notes[date][p])+'</div></div></div>'; }).join('');
+    var clearBtn=state.admin?'<button class="clear-day-btn" data-date="'+date+'">\ud83d\uddd1 \u6e05\u7a7a\u672c\u65e5\u5168\u90e8\u8a02\u55ae</button>':'';
+    el.innerHTML='<div class="date-chips">'+chips+'</div><div class="panel">'+
+      '<div class="panel-title">'+esc(CAL[date]||'')+'\u3000<span style="font-size:13px;color:var(--muted);font-weight:600">'+esc(dateDisplayTag(date))+'</span></div>'+
+      '<div class="panel-sub">\ud83d\udccb \u54c1\u9805\u7d71\u8a08\uff08\u7d66\u5e97\u5bb6\uff09</div>'+(statRows||'<div class="srow"><div class="sub">\u7121</div></div>')+
+      '<div class="grand"><span>\u5408\u8a08</span><span class="amt">$'+total+'</span></div>'+
+      (noteRows?'<div class="panel-sub">\ud83d\udcdd \u7279\u6b8a\u8981\u6c42</div>'+noteRows:'')+
+      '<div class="panel-sub">\ud83d\udc64 \u500b\u4eba\u660e\u7d30\uff08\u6536\u9322\u7528\uff09</div>'+personRows+
+      '<button class="btn btn-primary copy-sum" data-date="'+date+'" style="margin-top:18px">\u8907\u88fd\u8a02\u55ae\u6458\u8981</button>'+clearBtn+'</div>';
+  }
+  function copySummary(date){
+    var shop=CAL[date]||''; var allOrders=orders[date]||{}; var stats=calcItemStats(allOrders); var total=0;
+    var text='\ud83d\udce6 '+dateChipLabel(date)+' '+shop+'\n'+Array(23).join('\u2500')+'\n\u3010\u54c1\u9805\u7d71\u8a08\u3011\n';
+    Object.keys(stats).forEach(function(name){ var s=stats[name]; var amt=s.price*s.qty; total+=amt; text+=name+' \u00d7'+s.qty+'\u3000$'+amt+'\n'; });
+    text+='\u5408\u8a08\uff1a$'+total+'\n'+Array(23).join('\u2500')+'\n\u3010\u500b\u4eba\u660e\u7d30\u3011\n';
+    Object.keys(allOrders).forEach(function(p){ var items=allOrders[p]; if(!Array.isArray(items)||!items.length) return; var pn=(notes[date]&&notes[date][p])?('\uff08'+notes[date][p]+'\uff09'):''; text+=p+'\u3000$'+personTotal(items)+pn+'\n'; });
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ toast('\u5df2\u8907\u88fd\u8a02\u55ae\u6458\u8981'); },function(){ toast('\u8907\u88fd\u5931\u6557'); }); }
+    else { toast('\u6b64\u88dd\u7f6e\u4e0d\u652f\u63f4\u81ea\u52d5\u8907\u88fd'); }
+  }
+
+  // ---------------- payment ----------------
+  function renderPayment(){
+    var el=$('view-payment'); var dates=datesWithOrders();
+    if(!dates.length){ el.innerHTML='<div class="empty-note">\u76ee\u524d\u9084\u6c92\u6709\u4efb\u4f55\u8a02\u55ae\u3002</div>'; return; }
+    if(!state.payDate || dates.indexOf(state.payDate)===-1){ var t=todayISO(); state.payDate=dates.indexOf(t)!==-1?t:dates[dates.length-1]; }
+    var date=state.payDate;
+    var chips=dates.map(function(d){ return '<button class="date-chip'+(d===date?' selected':'')+'" data-date="'+d+'">'+esc(dateChipLabel(d))+'</button>'; }).join('');
+    var allOrders=orders[date]||{}; var people=Object.keys(allOrders).filter(function(p){ return Array.isArray(allOrders[p])&&allOrders[p].length>0; });
+    var pd=paid[date]||{}; var totalAmt=0,paidAmt=0,unpaid=[];
+    people.forEach(function(p){ var amt=personTotal(allOrders[p]); totalAmt+=amt; if(pd[p]) paidAmt+=amt; else unpaid.push([p,amt]); });
+    var rows=people.map(function(p){ var amt=personTotal(allOrders[p]); var on=!!pd[p]; var note=pd[p+'_note']||'';
+      return '<div class="pay-row'+(on?' paid':'')+'"><button class="pay-check'+(on?' on':'')+'" data-date="'+date+'" data-person="'+esc(p)+'">'+(on?'\u2713':'')+'</button>'+
+        '<div class="pinfo"><div class="pname">'+esc(p)+'</div><div class="pitems">'+esc(allOrders[p].map(function(i){ return i.name+(i.qty>1?' \u00d7'+i.qty:''); }).join('\u3001'))+'</div>'+
+        '<input class="pay-note" data-date="'+date+'" data-person="'+esc(p)+'" placeholder="\u5099\u8a3b\uff08\u627e\u9322\uff0f\u6b20\u6b3e\uff09" value="'+esc(note)+'" style="margin-top:6px;width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:12px;font-family:inherit;background:var(--paper);color:var(--ink);outline:none"></div>'+
+        '<div class="pamt">$'+amt+'</div></div>'; }).join('');
+    var unpaidBox=unpaid.length?'<div class="unpaid-box"><div class="t">\u26a0\ufe0f \u5c1a\u672a\u4ed8\u6b3e\uff08'+unpaid.length+' \u4eba\uff09</div>'+unpaid.map(function(u){ return '<span class="unpaid-chip">'+esc(u[0])+' $'+u[1]+'</span>'; }).join('')+'</div>':'<div class="allpaid">\u2705 \u4eca\u65e5\u5df2\u5168\u90e8\u6536\u6b3e\u5b8c\u7562\uff01</div>';
+    el.innerHTML='<div class="date-chips">'+chips+'</div><div class="panel">'+
+      '<div class="panel-title">'+esc(CAL[date]||'')+'\u3000<span style="font-size:13px;color:var(--muted);font-weight:600">'+esc(dateDisplayTag(date))+'</span></div>'+
+      '<div class="pay-stats"><div class="pay-stat"><div class="lab">\u61c9\u6536</div><div class="val blue">$'+totalAmt+'</div></div>'+
+      '<div class="pay-stat"><div class="lab">\u5df2\u6536</div><div class="val green">$'+paidAmt+'</div></div>'+
+      '<div class="pay-stat"><div class="lab">\u672a\u6536</div><div class="val orange">$'+(totalAmt-paidAmt)+'</div></div></div>'+
+      (rows||'<div class="empty-note">\u6b64\u65e5\u7121\u8a02\u55ae</div>')+unpaidBox+'</div>';
+  }
+  function togglePaid(date,person){ if(!cloudReady()) return; if(!paid[date]) paid[date]={}; paid[date][person]=!paid[date][person]; db.ref('paid').set(paid).catch(function(e){ toast('\u5132\u5b58\u5931\u6557\uff1a'+e.message); }); }
+  function savePayNote(date,person,note){ if(!cloudReady()) return; if(!paid[date]) paid[date]={}; if(note) paid[date][person+'_note']=note; else delete paid[date][person+'_note']; db.ref('paid').set(paid).catch(function(){}); }
+
+  // ---------------- tabs ----------------
+  function switchTab(tab){
+    if(tab==='payment' && !state.admin){ askPassword(function(){ switchTab('payment'); }); return; }
+    state.tab=tab;
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===tab); });
+    $('view-order').classList.toggle('active', tab==='order');
+    $('view-summary').classList.toggle('active', tab==='summary');
+    $('view-payment').classList.toggle('active', tab==='payment');
+    if(tab==='order'){ renderCart(); } else { $('cart-bar').style.display='none'; $('cart-detail').classList.remove('open'); }
+    if(tab==='summary') renderSummary();
+    if(tab==='payment') renderPayment();
+    window.scrollTo(0,0);
+  }
+
+  // ---------------- wire ----------------
+  function boot(){
+  $('content').addEventListener('click', onStepperClick);
+  $('calendar').addEventListener('change', function(e){ var sel=e.target.closest('.backup-select'); if(sel){ saveBackupStore(sel.dataset.key, sel.value); } });
+  $('cart-toggle').addEventListener('click', function(e){ if(e.target.closest('.btn')) return; $('cart-detail').classList.toggle('open'); });
+  $('clear-btn').addEventListener('click', clearMine);
+  $('submit-btn').addEventListener('click', submitOrder);
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.addEventListener('click', function(){ switchTab(b.dataset.tab); }); });
+  $('lock-btn').addEventListener('click', function(){ if(state.admin){ setAdmin(false); toast('\u5df2\u9396\u5b9a\u7ba1\u7406\u6a21\u5f0f'); } else { askPassword(null); } });
+  $('proxy-btn').addEventListener('click', startProxy);
+  $('pw-ok').addEventListener('click', tryUnlock);
+  $('pw-cancel').addEventListener('click', function(){ closePassword(); pendingUnlock=null; });
+  $('pw-input').addEventListener('keydown', function(e){ if(e.key==='Enter') tryUnlock(); });
+
+  $('view-summary').addEventListener('click', function(e){
+    var chip=e.target.closest('.date-chip'); if(chip){ state.sumDate=chip.dataset.date; renderSummary(); return; }
+    var cp=e.target.closest('.copy-sum'); if(cp){ copySummary(cp.dataset.date); return; }
+    var dp=e.target.closest('.del-person'); if(dp){ deletePersonOrder(dp.dataset.date, dp.dataset.person); return; }
+    var cd=e.target.closest('.clear-day-btn'); if(cd){ requestClearDay(cd.dataset.date); }
+  });
+  $('view-payment').addEventListener('click', function(e){
+    var chip=e.target.closest('.date-chip'); if(chip){ state.payDate=chip.dataset.date; renderPayment(); return; }
+    var pc=e.target.closest('.pay-check'); if(pc){ togglePaid(pc.dataset.date, pc.dataset.person); }
+  });
+  $('view-payment').addEventListener('change', function(e){ var ni=e.target.closest('.pay-note'); if(ni){ savePayNote(ni.dataset.date, ni.dataset.person, ni.value.trim()); } });
+
+  var nameInput=$('orderer-name');
+  try{ var saved=localStorage.getItem('bento_name'); if(saved) nameInput.value=saved; }catch(err){}
+  nameInput.addEventListener('change', function(){ if(state.proxyName) return; try{ localStorage.setItem('bento_name', (nameInput.value||'').trim()); }catch(err){}
+    if(state.tab==='order'){ loadMyOrder(); renderContent(); renderCart(); } });
+
+  try{ if(sessionStorage.getItem('bento_admin')==='1') setAdmin(true); }catch(e){}
+  buildCalendar();
+  initFirebase();
+  setInterval(function(){ refreshLockStates(); if(state.tab==='order') renderContent(); }, 60000);
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', boot); } else { boot(); }
+})();
+</script>
+
+<div class="pw-overlay" id="pw-overlay"><div class="pw-box"><div class="pw-title" id="pw-title">🔒 管理密碼</div><input id="pw-input" type="password" placeholder="請輸入管理密碼" autocomplete="off"><div class="pw-err" id="pw-err"></div><div class="pw-actions"><button id="pw-cancel">取消</button><button id="pw-ok">確定</button></div></div></div>
+<div id="loading-bar"></div>
+<div id="toast"></div>
+</body>
+</html>
