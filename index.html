@@ -458,7 +458,7 @@ footer.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:50px;
 
   // ================== 備用店家（3 個彈性格子）==================
   var BACKUP_KEYS = ['backup1','backup2','backup3'];
-  var BACKUP_LABELS = { backup1:'備用一', backup2:'備用二', backup3:'備用三' };
+  var BACKUP_LABELS = { backup1:''備用一'':"金仙蝦捲", backup2:''備用二'':"饕天餐盒", backup3:''備用三'':"阿里山鐵路便當" };
   var backupStores = {}; // backupStores[key] = 店家名稱字串，來自雲端 backupStores/
   function isBackupKey(k){ return BACKUP_KEYS.indexOf(k)!==-1; }
   BACKUP_KEYS.forEach(function(k){ CAL[k]=''; });
