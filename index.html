@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -930,40 +931,65 @@ footer.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:50px;
   // ---------------- summary ----------------
   function renderSummary(){
     var el=$('view-summary'); var dates=datesWithOrders();
-    if(!dates.length){ el.innerHTML='<div class="empty-note">\u76ee\u524d\u9084\u6c92\u6709\u4efb\u4f55\u8a02\u55ae\u3002<br>\u5230\u300c\u8a02\u8cfc\u300d\u9801\u9001\u51fa\u8a02\u55ae\u5f8c\uff0c\u9019\u88e1\u6703\u51fa\u73fe\u7d71\u8a08\u3002</div>'; return; }
+    if(!dates.length){ el.innerHTML='<div class="empty-note">目前還沒有任何訂單。<br>到「訂購」頁送出訂單後，這裡會出現統計。</div>'; return; }
     if(!state.sumDate || dates.indexOf(state.sumDate)===-1){ var t=todayISO(); state.sumDate=dates.indexOf(t)!==-1?t:dates[dates.length-1]; }
     var date=state.sumDate;
     var chips=dates.map(function(d){ return '<button class="date-chip'+(d===date?' selected':'')+'" data-date="'+d+'">'+esc(dateChipLabel(d))+'</button>'; }).join('');
     var allOrders=orders[date]||{}; var stats=calcItemStats(allOrders);
     var people=Object.keys(allOrders).filter(function(p){ return Array.isArray(allOrders[p])&&allOrders[p].length>0; });
     var total=0;
-    var statRows=Object.keys(stats).map(function(name){ var s=stats[name]; var amt=s.price*s.qty; total+=amt;
-      return '<div class="srow"><div><div class="nm">'+esc(name)+'</div></div><div style="display:flex;align-items:center;gap:14px"><span class="qty-badge">\u00d7'+s.qty+'</span><span class="amt">$'+amt+'</span></div></div>'; }).join('');
+
+    // ★ 新增：取得店家聯絡資訊 ★
+    var storeName = CAL[date]||'';
+    var storeInfo = STORES[storeName] || {};
+    var storeMetaHtml = '';
+    if(storeInfo.phone)     storeMetaHtml += '<div><span class="k">電話</span>'+esc(storeInfo.phone)+'</div>';
+    if(storeInfo.mobile)    storeMetaHtml += '<div><span class="k">手機</span>'+esc(storeInfo.mobile)+'</div>';
+    if(storeInfo.min_order) storeMetaHtml += '<div><span class="k">最低外送</span>'+esc(storeInfo.min_order)+'</div>';
+    if(storeInfo.address)   storeMetaHtml += '<div><span class="k">地址</span>'+esc(storeInfo.address)+'</div>';
+    var storeNoteHtml = storeInfo.note ? '<div class="store-note">＊ '+esc(storeInfo.note)+'</div>' : '';
+
+    // ★ 修改：品項統計依名稱排序（同品項會排在一起）★
+    var statRows=Object.keys(stats).sort(function(a,b){ return a.localeCompare(b,'zh-Hant'); }).map(function(name){
+      var s=stats[name]; var amt=s.price*s.qty; total+=amt;
+      return '<div class="srow"><div><div class="nm">'+esc(name)+'</div></div><div style="display:flex;align-items:center;gap:14px"><span class="qty-badge">×'+s.qty+'</span><span class="amt">$'+amt+'</span></div></div>';
+    }).join('');
+
     var personRows=people.map(function(p){ var items=allOrders[p]; var amt=personTotal(items);
       var pnote=(notes[date]&&notes[date][p])?notes[date][p]:'';
-      var sub=items.map(function(i){ return i.name+(i.qty>1?' \u00d7'+i.qty:''); }).join('\u3001')+(pnote?'\u3000\ud83d\udcdd '+esc(pnote):'');
-      var delBtn=state.admin?'<button class="del-person" data-date="'+date+'" data-person="'+esc(p)+'" title="\u522a\u9664">\ud83d\uddd1</button>':'';
+      var sub=items.map(function(i){ return i.name+(i.qty>1?' ×'+i.qty:''); }).join('、')+(pnote?'　📝 '+esc(pnote):'');
+      var delBtn=state.admin?'<button class="del-person" data-date="'+date+'" data-person="'+esc(p)+'" title="刪除">🗑</button>':'';
       return '<div class="srow"><div><div class="nm">'+esc(p)+'</div><div class="sub">'+sub+'</div></div><div style="display:flex;align-items:center"><span class="amt">$'+amt+'</span>'+delBtn+'</div></div>'; }).join('');
     var noteRows=people.filter(function(p){ return notes[date]&&notes[date][p]; }).map(function(p){
       return '<div class="srow"><div><div class="nm">'+esc(p)+'</div><div class="sub">'+esc(notes[date][p])+'</div></div></div>'; }).join('');
-    var clearBtn=state.admin?'<button class="clear-day-btn" data-date="'+date+'">\ud83d\uddd1 \u6e05\u7a7a\u672c\u65e5\u5168\u90e8\u8a02\u55ae</button>':'';
+    var clearBtn=state.admin?'<button class="clear-day-btn" data-date="'+date+'">🗑 清空本日全部訂單</button>':'';
+
     el.innerHTML='<div class="date-chips">'+chips+'</div><div class="panel">'+
-      '<div class="panel-title">'+esc(CAL[date]||'')+'\u3000<span style="font-size:13px;color:var(--muted);font-weight:600">'+esc(dateDisplayTag(date))+'</span></div>'+
-      '<div class="panel-sub">\ud83d\udccb \u54c1\u9805\u7d71\u8a08\uff08\u7d66\u5e97\u5bb6\uff09</div>'+(statRows||'<div class="srow"><div class="sub">\u7121</div></div>')+
-      '<div class="grand"><span>\u5408\u8a08</span><span class="amt">$'+total+'</span></div>'+
-      (noteRows?'<div class="panel-sub">\ud83d\udcdd \u7279\u6b8a\u8981\u6c42</div>'+noteRows:'')+
-      '<div class="panel-sub">\ud83d\udc64 \u500b\u4eba\u660e\u7d30\uff08\u6536\u9322\u7528\uff09</div>'+personRows+
-      '<button class="btn btn-primary copy-sum" data-date="'+date+'" style="margin-top:18px">\u8907\u88fd\u8a02\u55ae\u6458\u8981</button>'+clearBtn+'</div>';
-  }
+      '<div class="panel-title">'+esc(storeName)+'　<span style="font-size:13px;color:var(--muted);font-weight:600">'+esc(dateDisplayTag(date))+'</span></div>'+
+      '<div class="store-meta">'+storeMetaHtml+'</div>'+storeNoteHtml+
+      '<div class="panel-sub">📋 品項統計（給店家）</div>'+(statRows||'<div class="srow"><div class="sub">無</div></div>')+
+      '<div class="grand"><span>合計</span><span class="amt">$'+total+'</span></div>'+
+      (noteRows?'<div class="panel-sub">📝 特殊要求</div>'+noteRows:'')+
+      '<div class="panel-sub">👤 個人明細（收錢用）</div>'+personRows+
+      '<button class="btn btn-primary copy-sum" data-date="'+date+'" style="margin-top:18px">複製訂單摘要</button>'+clearBtn+'</div>';
+}
   function copySummary(date){
     var shop=CAL[date]||''; var allOrders=orders[date]||{}; var stats=calcItemStats(allOrders); var total=0;
-    var text='\ud83d\udce6 '+dateChipLabel(date)+' '+shop+'\n'+Array(23).join('\u2500')+'\n\u3010\u54c1\u9805\u7d71\u8a08\u3011\n';
-    Object.keys(stats).forEach(function(name){ var s=stats[name]; var amt=s.price*s.qty; total+=amt; text+=name+' \u00d7'+s.qty+'\u3000$'+amt+'\n'; });
-    text+='\u5408\u8a08\uff1a$'+total+'\n'+Array(23).join('\u2500')+'\n\u3010\u500b\u4eba\u660e\u7d30\u3011\n';
-    Object.keys(allOrders).forEach(function(p){ var items=allOrders[p]; if(!Array.isArray(items)||!items.length) return; var pn=(notes[date]&&notes[date][p])?('\uff08'+notes[date][p]+'\uff09'):''; text+=p+'\u3000$'+personTotal(items)+pn+'\n'; });
-    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ toast('\u5df2\u8907\u88fd\u8a02\u55ae\u6458\u8981'); },function(){ toast('\u8907\u88fd\u5931\u6557'); }); }
-    else { toast('\u6b64\u88dd\u7f6e\u4e0d\u652f\u63f4\u81ea\u52d5\u8907\u88fd'); }
-  }
+    var storeInfo = STORES[shop] || {};
+    var text='📦 '+dateChipLabel(date)+' '+shop+'\n';
+    if(storeInfo.phone)     text += '☎ 電話：'+storeInfo.phone+'\n';
+    if(storeInfo.mobile)    text += '📱 手機：'+storeInfo.mobile+'\n';
+    if(storeInfo.min_order) text += '🚚 最低外送：'+storeInfo.min_order+'\n';
+    if(storeInfo.note)      text += '📝 備註：'+storeInfo.note+'\n';
+    text += Array(23).join('─')+'\n【品項統計】\n';
+    Object.keys(stats).sort(function(a,b){ return a.localeCompare(b,'zh-Hant'); }).forEach(function(name){
+      var s=stats[name]; var amt=s.price*s.qty; total+=amt; text+=name+' ×'+s.qty+'　$'+amt+'\n';
+    });
+    text+='合計：$'+total+'\n'+Array(23).join('─')+'\n【個人明細】\n';
+    Object.keys(allOrders).forEach(function(p){ var items=allOrders[p]; if(!Array.isArray(items)||!items.length) return; var pn=(notes[date]&&notes[date][p])?('（'+notes[date][p]+'）'):''; text+=p+'　$'+personTotal(items)+pn+'\n'; });
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ toast('已複製訂單摘要'); },function(){ toast('複製失敗'); }); }
+    else { toast('此裝置不支援自動複製'); }
+}
 
   // ---------------- payment ----------------
   function renderPayment(){
