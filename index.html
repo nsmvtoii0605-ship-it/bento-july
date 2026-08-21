@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -358,6 +357,24 @@ footer.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:50px;
 .pay-check{width:34px;height:34px;border-radius:9px;border:2px solid var(--line);background:#fff;
   cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:16px;margin-top:2px;}
 .pay-check.on{background:#2e7d32;border-color:#2e7d32;}
+/* 品項統計勾選完成樣式 */
+.item-done{
+    opacity:.45;
+}
+
+.item-done .nm,
+.item-done .qty-badge,
+.item-done .amt{
+    text-decoration:line-through;
+}
+
+/* 品項統計勾選按鈕尺寸 */
+.item-check{
+    width:24px;
+    height:24px;
+    font-size:14px;
+    flex-shrink:0;
+}
 .pinfo{flex:1;min-width:0;}
 .pname{font-weight:700;font-size:14.5px;}
 .pitems{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5;}
@@ -955,7 +972,7 @@ footer.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:50px;
    return '<div class="srow">' +
 
 '<div style="display:flex;align-items:center;gap:10px;">' +
-'<input type="checkbox">' +
+'<button class="pay-check item-check"></button>' +
 '<div class="nm">'+esc(name)+'</div>' +
 '</div>' +
 
@@ -1058,7 +1075,23 @@ footer.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:50px;
   $('pw-input').addEventListener('keydown', function(e){ if(e.key==='Enter') tryUnlock(); });
 
   $('view-summary').addEventListener('click', function(e){
-    var chip=e.target.closest('.date-chip'); if(chip){ state.sumDate=chip.dataset.date; renderSummary(); return; }
+var ck = e.target.closest('.item-check');
+
+if(ck){
+
+    ck.classList.toggle('on');
+
+    if(ck.classList.contains('on')){
+        ck.innerHTML = '✓';
+        ck.closest('.srow').classList.add('item-done');
+    }else{
+        ck.innerHTML = '';
+        ck.closest('.srow').classList.remove('item-done');
+    }
+
+    return;
+}   
+ var chip=e.target.closest('.date-chip'); if(chip){ state.sumDate=chip.dataset.date; renderSummary(); return; }
     var cp=e.target.closest('.copy-sum'); if(cp){ copySummary(cp.dataset.date); return; }
     var dp=e.target.closest('.del-person'); if(dp){ deletePersonOrder(dp.dataset.date, dp.dataset.person); return; }
     var cd=e.target.closest('.clear-day-btn'); if(cd){ requestClearDay(cd.dataset.date); }
