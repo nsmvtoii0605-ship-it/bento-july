@@ -618,8 +618,33 @@ footer.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:50px;
     var itemName=menuDisplayName(item), oldName=cleanMenuPart(item.n);
     return ((itemName===stored.name || oldName===stored.name) && itemUnitPrice(item,[])===stored.price) ? [] : null;
   }
-  function datesWithOrders(){ return Object.keys(orders).filter(function(d){ var o=orders[d]||{}; return Object.keys(o).some(function(k){ return Array.isArray(o[k])&&o[k].length>0; }); }).sort(); }
+  function datesWithOrders(){
+  // 由本月行事曆取得目前使用的年月，例如 2026-10
+  var calendarDates = Object.keys(CAL)
+    .filter(function(d){
+      return !isBackupKey(d) && /^\d{4}-\d{2}-\d{2}$/.test(d);
+    })
+    .sort();
 
+  var currentMonth = calendarDates.length
+    ? calendarDates[0].slice(0, 7)
+    : todayISO().slice(0, 7);
+
+  return Object.keys(orders)
+    .filter(function(d){
+      // 隱藏其他月份的舊訂單，備用店家資料仍保留顯示
+      if(!isBackupKey(d) && d.slice(0, 7) !== currentMonth){
+        return false;
+      }
+
+      var o = orders[d] || {};
+
+      return Object.keys(o).some(function(k){
+        return Array.isArray(o[k]) && o[k].length > 0;
+      });
+    })
+    .sort();
+}
   var toastTimer=null;
   function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove('show'); },2400); }
   function showLoading(on){ var el=$('loading-bar'); if(el) el.style.opacity=on?'1':'0'; }
