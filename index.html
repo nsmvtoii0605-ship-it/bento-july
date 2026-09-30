@@ -619,31 +619,7 @@ footer.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:50px;
     return ((itemName===stored.name || oldName===stored.name) && itemUnitPrice(item,[])===stored.price) ? [] : null;
   }
   function datesWithOrders(){ return Object.keys(orders).filter(function(d){ var o=orders[d]||{}; return Object.keys(o).some(function(k){ return Array.isArray(o[k])&&o[k].length>0; }); }).sort(); }
-// 取得目前月份的第一天
-function currentMonthStart(){
-    var now = new Date();
 
-    return now.getFullYear() + '-' +
-        ('0' + (now.getMonth()+1)).slice(-2) +
-        '-01';
-}
-
-// 找出本月以前的訂單日期
-function oldOrderDates(){
-
-    var monthStart = currentMonthStart();
-
-    return datesWithOrders().filter(function(date){
-
-        // 只處理真正日期
-        if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){
-            return false;
-        }
-
-        return date < monthStart;
-    });
-}
-  
   var toastTimer=null;
   function toast(msg){ var t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove('show'); },2400); }
   function showLoading(on){ var el=$('loading-bar'); if(el) el.style.opacity=on?'1':'0'; }
@@ -958,49 +934,6 @@ function oldOrderDates(){
     askPassword(function(){ clearDay(date); }, '\u6e05\u7a7a\u300c'+dateDisplayTag(date)+'\u300d\u5168\u90e8\u8a02\u55ae\uff0c\u8acb\u8f38\u5165\u5bc6\u78bc\u78ba\u8a8d');
   }
   function clearDay(date){
-    function clearHistoryOrders(){
-
-    var oldDates = oldOrderDates();
-
-    if(!oldDates.length){
-        toast('目前沒有可清除的歷史資料');
-        return;
-    }
-
-    var msg =
-        '確定刪除以下歷史訂單？\n\n' +
-        oldDates.join('\n') +
-        '\n\n刪除後無法復原';
-
-    if(!confirm(msg)){
-        return;
-    }
-
-    if(!cloudReady()) return;
-
-    var updates = {};
-
-    oldDates.forEach(function(date){
-
-        updates['orders/' + safeDateKey(date)] = null;
-
-        updates['orderNotes/' + safeDateKey(date)] = null;
-
-        updates['paid/' + date] = null;
-    });
-
-    db.ref().update(updates)
-    .then(function(){
-
-        toast('✅ 歷史資料已刪除');
-
-    })
-    .catch(function(err){
-
-        toast('刪除失敗：' + err.message);
-    });
-}
-
     var sd=safeDateKey(date);
     if(!cloudReady()) return;
     db.ref('orders/'+sd).set(null); db.ref('orderNotes/'+sd).set(null);
