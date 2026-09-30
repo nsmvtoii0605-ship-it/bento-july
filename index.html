@@ -958,6 +958,49 @@ function oldOrderDates(){
     askPassword(function(){ clearDay(date); }, '\u6e05\u7a7a\u300c'+dateDisplayTag(date)+'\u300d\u5168\u90e8\u8a02\u55ae\uff0c\u8acb\u8f38\u5165\u5bc6\u78bc\u78ba\u8a8d');
   }
   function clearDay(date){
+    function clearHistoryOrders(){
+
+    var oldDates = oldOrderDates();
+
+    if(!oldDates.length){
+        toast('目前沒有可清除的歷史資料');
+        return;
+    }
+
+    var msg =
+        '確定刪除以下歷史訂單？\n\n' +
+        oldDates.join('\n') +
+        '\n\n刪除後無法復原';
+
+    if(!confirm(msg)){
+        return;
+    }
+
+    if(!cloudReady()) return;
+
+    var updates = {};
+
+    oldDates.forEach(function(date){
+
+        updates['orders/' + safeDateKey(date)] = null;
+
+        updates['orderNotes/' + safeDateKey(date)] = null;
+
+        updates['paid/' + date] = null;
+    });
+
+    db.ref().update(updates)
+    .then(function(){
+
+        toast('✅ 歷史資料已刪除');
+
+    })
+    .catch(function(err){
+
+        toast('刪除失敗：' + err.message);
+    });
+}
+
     var sd=safeDateKey(date);
     if(!cloudReady()) return;
     db.ref('orders/'+sd).set(null); db.ref('orderNotes/'+sd).set(null);
